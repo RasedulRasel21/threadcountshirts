@@ -37,7 +37,13 @@
 }
 #shopify-section-{{ section.id }} .slideshow__buttons a{
  color: #fff;
- text-underline-offset: 6px;
+  text-decoration: none;
+  background: #081831;
+  padding: 10px 20px;
+  border-radius: 40px;
+  font-weight: 600;
+  letter-spacing: 3px;
+  font-size: 20px;
 }
 
 
@@ -275,14 +281,16 @@
 
 
 #shopify-section-{{ section.id }} .rich-text__subheading {
- margin-bottom: 1.6rem;
- opacity: 0.8;
+ font-size: 20px;
 }
 
 
 #shopify-section-{{ section.id }} .rich-text__heading {
  margin-bottom: 2.4rem;
  line-height: 1.2;
+ padding: 0;
+ margin: 0;
+ font-size: 36px;
 }
 
 
@@ -413,6 +421,10 @@
    align-items: center;
  }
 
+ #shopify-section-{{ section.id }} .rich-text__heading {
+ font-size: 72px;
+}
+
 
  #shopify-section-{{ section.id }} .slideshow__content.content-overlay-top-left {
    justify-content: flex-start;
@@ -488,6 +500,11 @@
  #shopify-section-{{ section.id }} .slideshow-pagination {
    bottom: 2rem;
  }
+ #shopify-section-{{ section.id }} .slideshow__buttons a {
+    padding: 12px 18px !important;
+    letter-spacing: 2px !important;
+    font-size: 14px !important;
+}
 }
 {%- endstyle -%}
 
@@ -808,7 +825,7 @@
                    {%- endunless -%}
                    {%- unless block.settings.title == blank -%}
                      <h2 class="slideshow__title {{ block.settings.heading_size }} rich-text__heading block">
-                       {{- block.settings.title -}}
+                       {{ block.settings.title | replace: '|', '<br>' }}
                      </h2>
                    {%- endunless -%}
                    {%- unless block.settings.description == blank -%}

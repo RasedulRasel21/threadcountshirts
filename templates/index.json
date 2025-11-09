@@ -55,89 +55,105 @@
         "slide_BJw3GE": {
           "type": "slide",
           "settings": {
-            "color_scheme": "",
-            "background": "shopify://shop_images/Screenshot_2025-09-28_at_4.56.29_PM.png",
-            "background_mobile": "shopify://shop_images/Screenshot_2025-09-28_at_4.56.29_PM.png",
-            "image_overlay_opacity": 0,
-            "content_position": "middle-center",
-            "content_position_mobile": "middle-center",
-            "text_alignment": "center",
-            "title": "",
-            "heading_size": "hd1",
-            "subheading": "",
-            "description": "",
-            "description_size": "text-base",
-            "button_label": "",
-            "button_link": "",
-            "button_style": "btn--primary"
-          }
-        },
-        "slide_Jg4LMb": {
-          "type": "slide",
-          "settings": {
-            "color_scheme": "",
-            "background": "shopify://shop_images/Img_2_308e22a0-21fd-4d37-a4fc-7c2b08a8d524.jpg",
-            "background_mobile": "shopify://shop_images/Raw_Honey_Butter_4.jpg",
+            "color_scheme": "scheme-2",
+            "background": "shopify://shop_images/2025_Threadcount_Homepage_Header_Slider_Light_Blue_Right_Center_1512x_d685af32-b707-4856-99fa-1d0f53a2374c.webp",
             "image_overlay_opacity": 0,
             "content_position": "middle-left",
             "content_position_mobile": "middle-center",
-            "text_alignment": "center",
-            "title": "",
+            "text_alignment": "left",
+            "title": "Custom|T-Shirts",
             "heading_size": "hd1",
-            "subheading": "",
+            "subheading": "MAKE YOUR OWN",
             "description": "",
             "description_size": "text-base",
-            "button_label": "",
-            "button_link": "",
+            "button_label": "START YOUR ORDER",
+            "button_link": "shopify://products/custom-t-shirts",
             "button_style": "btn--primary"
           }
         },
-        "slide_qpgprm": {
+        "slide_rggrfb": {
           "type": "slide",
           "settings": {
-            "color_scheme": "",
-            "background": "shopify://shop_images/Screenshot_2025-09-28_at_4.58.15_PM.png",
-            "background_mobile": "shopify://shop_images/Screenshot_2025-09-28_at_4.58.15_PM.png",
+            "color_scheme": "scheme-2",
+            "background": "shopify://shop_images/2025_Threadcount_Homepage_Header_Slider_Orange_Center_Right_1512x_cc031ce7-ec74-4210-8148-fa7abd0564bd.webp",
             "image_overlay_opacity": 0,
-            "content_position": "middle-center",
+            "content_position": "middle-left",
             "content_position_mobile": "middle-center",
-            "text_alignment": "center",
-            "title": "",
+            "text_alignment": "left",
+            "title": "Custom|T-Shirts",
             "heading_size": "hd1",
-            "subheading": "",
+            "subheading": "MAKE YOUR OWN",
             "description": "",
             "description_size": "text-base",
-            "button_label": "",
-            "button_link": "",
+            "button_label": "START YOUR ORDER",
+            "button_link": "shopify://products/custom-t-shirts",
             "button_style": "btn--primary"
           }
         },
-        "slide_Da8wG4": {
+        "slide_UPExUg": {
           "type": "slide",
           "settings": {
-            "color_scheme": "scheme-1",
-            "background": "shopify://shop_images/Img_4_977f1430-35ee-46d6-aca7-d99fb87098c8.jpg",
-            "background_mobile": "shopify://shop_images/img_4_afeb5d7e-3784-4616-8f89-d4483c9c6d6e.jpg",
+            "color_scheme": "scheme-2",
+            "background": "shopify://shop_images/2025_Threadcount_Homepage_Header_Slider_Purple_Center_Right_1512x_e43c5092-41ad-483f-8505-0282b6eb11e6.webp",
             "image_overlay_opacity": 0,
-            "content_position": "middle-center",
+            "content_position": "middle-left",
             "content_position_mobile": "middle-center",
-            "text_alignment": "center",
-            "title": "",
+            "text_alignment": "left",
+            "title": "Custom|T-Shirts",
             "heading_size": "hd1",
-            "subheading": "",
+            "subheading": "MAKE YOUR OWN",
             "description": "",
             "description_size": "text-base",
-            "button_label": "",
-            "button_link": "",
+            "button_label": "START YOUR ORDER",
+            "button_link": "shopify://products/custom-t-shirts",
+            "button_style": "btn--primary"
+          }
+        },
+        "slide_tCPz4N": {
+          "type": "slide",
+          "settings": {
+            "color_scheme": "scheme-2",
+            "background": "shopify://shop_images/2025_Threadcount_Homepage_Header_Slider_Bright_Red_Center_Right_1512x_1252ae1e-63cd-49b4-9f14-c7f02e66c934.webp",
+            "image_overlay_opacity": 0,
+            "content_position": "middle-left",
+            "content_position_mobile": "middle-center",
+            "text_alignment": "left",
+            "title": "Custom|T-Shirts",
+            "heading_size": "hd1",
+            "subheading": "MAKE YOUR OWN",
+            "description": "",
+            "description_size": "text-base",
+            "button_label": "START YOUR ORDER",
+            "button_link": "shopify://products/custom-t-shirts",
+            "button_style": "btn--primary"
+          }
+        },
+        "slide_nVb8Dy": {
+          "type": "slide",
+          "settings": {
+            "color_scheme": "scheme-2",
+            "background": "shopify://shop_images/2025_Threadcount_Homepage_Header_Slider_Pink_Right_Center_1512x_89abd9dd-9fd9-401a-8e9f-3458664df970.webp",
+            "image_overlay_opacity": 0,
+            "content_position": "middle-left",
+            "content_position_mobile": "middle-center",
+            "text_alignment": "left",
+            "title": "Custom|T-Shirts",
+            "heading_size": "hd1",
+            "subheading": "MAKE YOUR OWN",
+            "description": "",
+            "description_size": "text-base",
+            "button_label": "START YOUR ORDER",
+            "button_link": "shopify://products/custom-t-shirts",
             "button_style": "btn--primary"
           }
         }
       },
       "block_order": [
         "slide_BJw3GE",
-        "slide_Jg4LMb",
-        "slide_qpgprm",
-        "slide_Da8wG4"
+        "slide_rggrfb",
+        "slide_UPExUg",
+        "slide_tCPz4N",
+        "slide_nVb8Dy"
       ],
       "name": "Slideshow V2",
       "settings": {
@@ -149,73 +165,123 @@
         "autoplay_delay": 4,
         "controls_position": "bottom",
         "show_text_below": true,
-        "text_alignment_mobile": "center",
-        "accessibility_info": "Product slideshow",
+        "text_alignment_mobile": "left",
+        "accessibility_info": "",
         "custom_class": ""
       }
     },
-    "rich_text_bhFXGd": {
-      "type": "rich-text",
+    "multicolumn_QR6PJQ": {
+      "type": "multicolumn",
       "blocks": {
-        "heading_aiWfLt": {
-          "type": "heading",
+        "column_6GiUXG": {
+          "type": "column",
           "settings": {
-            "heading": "Raw, Natural & Chemical‑Free Wellness",
-            "heading_size": "h1"
+            "image": "shopify://shop_images/11.avif",
+            "title": "Full Color Printing",
+            "text": "<p>Print full color photos and graphics on one of our premium custom t-shirts.</p>",
+            "link_label": "",
+            "link": ""
           }
         },
-        "button_DwUf7W": {
-          "type": "button",
+        "column_4rnjE4": {
+          "type": "column",
           "settings": {
-            "button_label": "Shop Now",
-            "button_link": "shopify://collections/all",
-            "button_style_secondary": false,
-            "button_label_2": "",
-            "button_link_2": "",
-            "button_style_secondary_2": false
+            "image": "shopify://shop_images/22.avif",
+            "title": "Premium T-Shirts",
+            "text": "<p>Our t-shirts are made from 100% ring-spun cotton for a super soft comfortable wear.</p>",
+            "link_label": "",
+            "link": ""
+          }
+        },
+        "column_w86An8": {
+          "type": "column",
+          "settings": {
+            "image": "shopify://shop_images/33.avif",
+            "title": "Lightning Fast Turnaround",
+            "text": "<p>Get your premium full color custom t-shirts printed in as little as 7 business days.</p>",
+            "link_label": "",
+            "link": ""
           }
         }
       },
       "block_order": [
-        "heading_aiWfLt",
-        "button_DwUf7W"
+        "column_6GiUXG",
+        "column_4rnjE4",
+        "column_w86An8"
       ],
-      "name": "t:sections.rich-text.presets.name",
+      "name": "t:sections.multicolumn.presets.name",
       "settings": {
-        "desktop_content_position": "center",
-        "content_alignment": "center",
+        "title": "",
+        "heading_size": "h1",
+        "image_width": "third",
+        "image_ratio": "adapt",
+        "button_label": "",
+        "button_link": "",
+        "columns_desktop": 3,
+        "column_alignment": "center",
+        "background_style": "primary",
         "color_scheme": "",
-        "full_width": true,
-        "padding_top": 40,
-        "padding_bottom": 52
+        "columns_mobile": "1",
+        "swipe_on_mobile": false,
+        "padding_top": 36,
+        "padding_bottom": 36
       }
     },
-    "feature_collection_v2_hbtnck": {
-      "type": "feature-collection-v2",
-      "custom_css": [
-        ".section__header--text {text-align: left;}"
+    "multicolumn_ayVJyJ": {
+      "type": "multicolumn",
+      "blocks": {
+        "column_JiL7AN": {
+          "type": "column",
+          "settings": {
+            "image": "shopify://shop_images/111.webp",
+            "title": "Choose",
+            "text": "<p>Choose one of our premium t-shirts, upload artwork, and place your order.</p>",
+            "link_label": "",
+            "link": ""
+          }
+        },
+        "column_pDrFh6": {
+          "type": "column",
+          "settings": {
+            "image": "shopify://shop_images/222.webp",
+            "title": "Customize",
+            "text": "<p>Our designers will create a free custom proof and send an email for your approval.</p>",
+            "link_label": "",
+            "link": ""
+          }
+        },
+        "column_WRwRGe": {
+          "type": "column",
+          "settings": {
+            "image": "shopify://shop_images/333.webp",
+            "title": "Create",
+            "text": "<p>Once approved, we'll print your brand new premium full color custom t-shirts.</p>",
+            "link_label": "",
+            "link": ""
+          }
+        }
+      },
+      "block_order": [
+        "column_JiL7AN",
+        "column_pDrFh6",
+        "column_WRwRGe"
       ],
-      "name": "Featured Collection V2",
+      "name": "t:sections.multicolumn.presets.name",
       "settings": {
-        "color_scheme": "",
-        "heading": "SHOP BEST SELLERS",
+        "title": "",
         "heading_size": "h1",
-        "subheading": "",
-        "description": "<p>Shop our <strong>best selling products</strong></p>",
-        "show_collection_description": false,
-        "collection": "all-products-1",
-        "limit": 4,
-        "columns": 4,
-        "column_gap": 20,
-        "row_gap": 40,
-        "pcard_image_ratio": "3/4",
-        "columns_mobile": "2",
-        "show_all_button_on_top": true,
+        "image_width": "full",
+        "image_ratio": "adapt",
         "button_label": "",
-        "button_style": "btn--primary",
-        "padding_top": 50,
-        "padding_bottom": 50,
-        "custom_class": ""
+        "button_link": "",
+        "columns_desktop": 3,
+        "column_alignment": "center",
+        "background_style": "primary",
+        "color_scheme": "",
+        "columns_mobile": "1",
+        "swipe_on_mobile": false,
+        "padding_top": 36,
+        "padding_bottom": 36
       }
     },
     "image_with_text_7zJT7a": {
@@ -224,25 +290,34 @@
         "heading_E9KNnE": {
           "type": "heading",
           "settings": {
-            "heading": "What's Inside?",
+            "heading": "Have a large order?",
             "heading_size": "h1"
           }
         },
         "text_Jejphg": {
           "type": "text",
           "settings": {
-            "text": "<p>Use this text to share information about your brand with your customers. Describe a product, share announcements, or welcome customers to your store.</p>",
+            "text": "<p>We can handle that too! Print on your favorite t-shirts, hoodies, and more in variety of styles and colors.</p>",
             "text_style": "body"
+          }
+        },
+        "button_nFLpHg": {
+          "type": "button",
+          "settings": {
+            "button_label": "GET A QUOTE NOW",
+            "button_link": "shopify://pages/get-a-quote-now",
+            "button_style_secondary": false
           }
         }
       },
       "block_order": [
         "heading_E9KNnE",
-        "text_Jejphg"
+        "text_Jejphg",
+        "button_nFLpHg"
       ],
       "name": "t:sections.image-with-text.presets.name",
       "settings": {
-        "image": "shopify://shop_images/Purishh_Hero_image-whiteBG_34476550-1718-42ec-be0f-ffd73e33356d.jpg",
+        "image": "shopify://shop_images/444.webp",
         "height": "adapt",
         "desktop_image_width": "medium",
         "layout": "image_first",
@@ -263,7 +338,7 @@
         "image_qkzy7g": {
           "type": "image",
           "settings": {
-            "image": "shopify://shop_images/1.png",
+            "image": "shopify://shop_images/a1.avif",
             "image_height": 80,
             "image_rounded": false,
             "image_link": "",
@@ -273,7 +348,7 @@
         "image_pgVC6z": {
           "type": "image",
           "settings": {
-            "image": "shopify://shop_images/2.png",
+            "image": "shopify://shop_images/a2.avif",
             "image_height": 80,
             "image_rounded": false,
             "image_link": "",
@@ -283,7 +358,7 @@
         "image_rFfxgt": {
           "type": "image",
           "settings": {
-            "image": "shopify://shop_images/3.png",
+            "image": "shopify://shop_images/a3.avif",
             "image_height": 80,
             "image_rounded": false,
             "image_link": "",
@@ -293,7 +368,7 @@
         "image_TyR9MU": {
           "type": "image",
           "settings": {
-            "image": "shopify://shop_images/4.png",
+            "image": "shopify://shop_images/a4.avif",
             "image_height": 80,
             "image_rounded": false,
             "image_link": "",
@@ -303,77 +378,17 @@
         "image_FfgjF6": {
           "type": "image",
           "settings": {
-            "image": "shopify://shop_images/5.png",
+            "image": "shopify://shop_images/a5.avif",
             "image_height": 80,
             "image_rounded": false,
             "image_link": "",
             "image_height_mobile": 90
           }
         },
-        "image_NAMWfL": {
+        "image_pkm3Bq": {
           "type": "image",
           "settings": {
-            "image": "shopify://shop_images/6.png",
-            "image_height": 80,
-            "image_rounded": false,
-            "image_link": "",
-            "image_height_mobile": 90
-          }
-        },
-        "image_XBDKck": {
-          "type": "image",
-          "settings": {
-            "image": "shopify://shop_images/7.png",
-            "image_height": 80,
-            "image_rounded": false,
-            "image_link": "",
-            "image_height_mobile": 90
-          }
-        },
-        "image_gcxmHq": {
-          "type": "image",
-          "settings": {
-            "image": "shopify://shop_images/8.png",
-            "image_height": 80,
-            "image_rounded": false,
-            "image_link": "",
-            "image_height_mobile": 90
-          }
-        },
-        "image_8DxQK7": {
-          "type": "image",
-          "settings": {
-            "image": "shopify://shop_images/9.png",
-            "image_height": 80,
-            "image_rounded": false,
-            "image_link": "",
-            "image_height_mobile": 90
-          }
-        },
-        "image_XXttaG": {
-          "type": "image",
-          "settings": {
-            "image": "shopify://shop_images/10.png",
-            "image_height": 80,
-            "image_rounded": false,
-            "image_link": "",
-            "image_height_mobile": 90
-          }
-        },
-        "image_4GQhBL": {
-          "type": "image",
-          "settings": {
-            "image": "shopify://shop_images/11.png",
-            "image_height": 80,
-            "image_rounded": false,
-            "image_link": "",
-            "image_height_mobile": 90
-          }
-        },
-        "image_fbWW9H": {
-          "type": "image",
-          "settings": {
-            "image": "shopify://shop_images/12.png",
+            "image": "shopify://shop_images/a6.avif",
             "image_height": 80,
             "image_rounded": false,
             "image_link": "",
@@ -387,13 +402,7 @@
         "image_rFfxgt",
         "image_TyR9MU",
         "image_FfgjF6",
-        "image_NAMWfL",
-        "image_XBDKck",
-        "image_gcxmHq",
-        "image_8DxQK7",
-        "image_XXttaG",
-        "image_4GQhBL",
-        "image_fbWW9H"
+        "image_pkm3Bq"
       ],
       "name": "Scrolling Promotion V2",
       "settings": {
@@ -410,122 +419,14 @@
         "divider_layout": "vertical",
         "custom_class": ""
       }
-    },
-    "collection_list_Ufrwd4": {
-      "type": "collection-list",
-      "blocks": {
-        "featured_collection_rmkwV7": {
-          "type": "featured_collection",
-          "settings": {
-            "collection": "frontpage"
-          }
-        },
-        "featured_collection_8mmbcp": {
-          "type": "featured_collection",
-          "settings": {
-            "collection": "elemental-fuel-performance"
-          }
-        },
-        "featured_collection_KEPtVK": {
-          "type": "featured_collection",
-          "settings": {
-            "collection": "foundational-wisdom"
-          }
-        }
-      },
-      "block_order": [
-        "featured_collection_rmkwV7",
-        "featured_collection_8mmbcp",
-        "featured_collection_KEPtVK"
-      ],
-      "name": "t:sections.collection-list.presets.name",
-      "settings": {
-        "title": "Purely <strong>Natural</strong>, Perfectly <strong>You</strong>",
-        "heading_size": "h1",
-        "image_ratio": "square",
-        "columns_desktop": 3,
-        "color_scheme": "",
-        "show_view_all": false,
-        "columns_mobile": "1",
-        "swipe_on_mobile": false,
-        "padding_top": 36,
-        "padding_bottom": 36
-      }
-    },
-    "17622702573a430782": {
-      "type": "apps",
-      "settings": {
-        "include_margins": true
-      }
-    },
-    "image_with_text_d98tdF": {
-      "type": "image-with-text",
-      "blocks": {
-        "heading_KtNtWa": {
-          "type": "heading",
-          "settings": {
-            "heading": "Why Purishh?",
-            "heading_size": "h1"
-          }
-        },
-        "text_ed8g47": {
-          "type": "text",
-          "settings": {
-            "text": "<h3>Pure Ingredients</h3><p>Handpicked and ethically sourced from trusted, natural farms.</p><h3>Effective Results</h3><p>Each product is designed to protect, nourish, and enhance your skin’s natural balance.</p><h3>Holistic Wellness</h3><p>Embrace a balanced lifestyle with supplements and creams that work in harmony with your body.</p>",
-            "text_style": "body"
-          }
-        }
-      },
-      "block_order": [
-        "heading_KtNtWa",
-        "text_ed8g47"
-      ],
-      "name": "t:sections.image-with-text.presets.name",
-      "settings": {
-        "image": "shopify://shop_images/Banner_img.jpg",
-        "height": "adapt",
-        "desktop_image_width": "medium",
-        "layout": "image_first",
-        "image_behavior": "none",
-        "content_layout": "no-overlap",
-        "desktop_content_position": "middle",
-        "desktop_content_alignment": "left",
-        "mobile_content_alignment": "left",
-        "section_color_scheme": "",
-        "color_scheme": "",
-        "padding_top": 36,
-        "padding_bottom": 36
-      }
-    },
-    "featured_blog_XmVCpB": {
-      "type": "featured-blog",
-      "name": "t:sections.featured-blog.presets.name",
-      "settings": {
-        "blog": "news",
-        "post_limit": 3,
-        "heading": "Pür Insights",
-        "heading_size": "h1",
-        "columns_desktop": 3,
-        "show_view_all": false,
-        "show_image": true,
-        "show_date": true,
-        "show_author": false,
-        "color_scheme": "",
-        "padding_top": 36,
-        "padding_bottom": 36
-      }
     }
   },
   "order": [
     "image_banner",
     "slideshow_v2_PyhzcW",
-    "rich_text_bhFXGd",
-    "feature_collection_v2_hbtnck",
+    "multicolumn_QR6PJQ",
+    "multicolumn_ayVJyJ",
     "image_with_text_7zJT7a",
-    "image_marquee_P8WLDG",
-    "collection_list_Ufrwd4",
-    "17622702573a430782",
-    "image_with_text_d98tdF",
-    "featured_blog_XmVCpB"
+    "image_marquee_P8WLDG"
   ]
 }
