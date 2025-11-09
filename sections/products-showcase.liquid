@@ -1,0 +1,683 @@
+{%- liquid
+  assign products = section.settings.products
+  assign image_ratio = section.settings.pcard_image_ratio | default: '1/1'
+  assign enable_slider = false
+  if products.count != 1
+    assign enable_slider = true
+  endif
+-%}
+
+<style>
+/* Products Showcase CSS */
+.product-showcase {
+  --item-spacing: 1.2rem;
+  --button-spacing: 2.4rem;
+}
+.product-showcase__thumbnail {
+  min-width: 0;
+  min-height: 0;
+}
+.product-showcase__info {
+  min-width: 0;
+  min-height: 0;
+  padding: 2.4rem 0 0;
+}
+.product-showcase__info-inner > * + * {
+  margin-top: var(--item-spacing);
+}
+.product-showcase__view-details {
+  margin-top: var(--button-spacing);
+}
+
+.section--products-showcase .slider-controls--below {
+  --controls-spacing: 2.4rem;
+}
+@media (min-width: 768px) {
+  .section--products-showcase .product-showcase {
+    --item-spacing: 2rem;
+    --button-spacing: 4rem;
+  }
+  .section--products-showcase .product-showcase__info {
+    padding: 0 3rem;
+  }
+  .section--products-showcase.slider-enabled .section__header-wrap {
+    padding-bottom: var(--header-padding-bottom);
+  }
+  .section--products-showcase.slider-enabled .section__header {
+    padding: 0;
+  }
+  .section--products-showcase .swiper-controls {
+    position: relative;
+  }
+  .section--products-showcase .swiper-button-prev,
+  .section--products-showcase .swiper-button-next {
+    position: relative;
+    top: auto;
+    left: auto;
+    right: auto;
+    margin: 0;
+  }
+}
+@media (min-width: 1024px) {
+  .section--products-showcase.slider-enabled .swiper-slide {
+    width: 92rem;
+    max-width: 70%;
+  }
+  .section--products-showcase.slider-enabled .section__content {
+    margin-inline-end: calc(-1 * var(--page-padding) - 15.5rem);
+  }
+  .no-js .section--products-showcase.slider-enabled .section__content {
+    margin-inline-end: 0;
+  }
+  .section--products-showcase .product-showcase {
+    --item-spacing: 2rem;
+    --button-spacing: 6.2rem;
+  }
+  .section--products-showcase .product-showcase__info {
+    padding: 0 5rem;
+  }
+}
+</style>
+
+{%- if section.settings.show_section_divider -%}
+  <div class="section-divider{% if section.settings.divider_width == 'fixed' %} page-width{% endif %}">
+    <div class="border-top no-empty"></div>
+  </div>
+{%- endif -%}
+
+<div
+  class="section section-{{ section.id }} section--padding section--products-showcase{% if enable_slider %} slider-enabled{% endif %} page-width color-{{ section.settings.color_scheme }}"
+  style="--section-padding-top: {{ section.settings.padding_top }}px;--section-padding-bottom: {{ section.settings.padding_bottom }}px;"
+  data-id="{{ section.id }}"
+>
+  {%- unless enable_slider -%}
+    {%- if section.settings.heading != blank -%}
+      <div class="section__header section__header--vertical spacing--normal">
+        <div class="section__header--text text-center">
+          {%- if section.settings.heading != blank -%}
+            <h2 class="section__heading {{ section.settings.heading_size }}">{{ section.settings.heading }}</h2>
+          {%- endif -%}
+        </div>
+      </div>
+    {%- endif -%}
+  {%- endunless -%}
+  <div class="section__wrapper relative slider-controls--grouped-mobile slider-controls--below">
+    {%- if enable_slider -%}
+      <div class="section__header-wrap flex justify-between gap-3">
+        {%- if section.settings.heading != blank -%}
+          <div class="section__header section__header--horizontal md:flex md:flex-col md:flex-row md:justify-between md:items-center gap-x-4 spacing--normal flex-grow">
+            <div class="section__header--text text-center md:text-left">
+              <h2 class="section__heading {{ section.settings.heading_size }}">{{ section.settings.heading }}</h2>
+            </div>
+          </div>
+        {%- endif -%}
+
+        <div class="slider-controls--group">
+          <div class="slider-controls block md:flex items-center justify-start gap-2">
+            <button
+              class="swiper-button-prev btn"
+              name="previous"
+              aria-label="Previous slide"
+            >
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M15 18l-6-6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </button>
+            <button
+              class="swiper-button-next btn"
+              name="next"
+              aria-label="Next slide"
+            >
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M9 18l6-6-6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </button>
+            <div class="swiper-pagination"></div>
+          </div>
+        </div>
+      </div>
+    {%- endif -%}
+    <motion-element data-motion="fade-up" data-motion-delay="50" class="block section__content">
+      <products-showcase
+        data-section-id="{{ section.id }}"
+        data-enable-slider="{{ enable_slider }}"
+        data-item-gap="10"
+        class="block"
+      >
+        <div class="swiper">
+          <div class="swiper-wrapper">
+            {%- if products != blank -%}
+              {% for product in products %}
+                {%- liquid
+                  assign first_media_type = product.media.first.media_type
+                  assign featured_media = product.featured_media
+                  if image_ratio == 'adapt'
+                    if first_media_type == 'video' or first_media_type == 'model'
+                      assign image_ratio = product.media.first.preview_image.aspect_ratio
+                    else
+                      assign image_ratio = product.featured_media.aspect_ratio
+                    endif
+                  endif
+
+                  assign loading = 'lazy'
+                  assign fetchpriority = 'low'
+                  if section.index < 2 and forloop.index == 1
+                    assign loading = 'eager'
+                    assign fetchpriority = 'high'
+                  endif
+                -%}
+                <div class="swiper-slide">
+                  <div class="product-showcase grid f-grid-1-cols md:f-grid-2-cols">
+                    <div class="product-showcase__thumbnail">
+                      <div class="media-wrapper blocks-radius">
+                        <a
+                          href="{{ product.url }}"
+                          class="hover-wrapper"
+                          aria-label="{{ product.title | escape }}"
+                          tabindex="-1"
+                        >
+                          {%- if featured_media -%}
+                            {%- unless featured_media.media_type == 'video'
+                              or featured_media.media_type == 'external_video'
+                            -%}
+                              <div class="w-full" style="--aspect-ratio: {{ image_ratio | default: 1 }}">
+                                {{
+                                  featured_media
+                                  | image_url: width: 1500
+                                  | image_tag:
+                                    loading: loading,
+                                    fetchpriority: fetchpriority,
+                                    class: 'motion-reduce hover-scale-up',
+                                    widths: '360, 460, 535, 720, 920, 1070',
+                                    is: 'image-lazy'
+                                }}
+                              </div>
+                            {%- else -%}
+                              <div
+                                class="media media--adapt"
+                                style="--media-ratio: {{ image_ratio }};"
+                              >
+                                {{
+                                  featured_media
+                                  | image_url: width: 1500
+                                  | image_tag:
+                                    loading: loading,
+                                    fetchpriority: fetchpriority,
+                                    class: 'motion-reduce',
+                                    widths: '360, 460, 535, 720, 920, 1070',
+                                    is: 'image-lazy'
+                                }}
+                              </div>
+                            {%- endunless -%}
+                          {%- else -%}
+                            {{- 'product-1' | placeholder_svg_tag: 'placeholder-svg' -}}
+                          {%- endif -%}
+                        </a>
+                      </div>
+                    </div>
+                    <div class="product-showcase__info flex items-center">
+                      <div class="product-showcase__info-inner w-full">
+                        {%- if section.settings.pcard_show_vendor -%}
+                          <p class="product-showcase__vendor h5">
+                            <span class="visually-hidden">Vendor</span>
+                            {{ product.vendor }}
+                          </p>
+                        {%- endif -%}
+                        {%- if section.settings.pcard_show_type -%}
+                          <p class="product-showcase__type h5">
+                            <span class="visually-hidden">Product type</span>
+                            {{ product.type }}
+                          </p>
+                        {%- endif -%}
+                        <h3 class="product-showcase__title {{ section.settings.pcard_title_size }}">
+                          <a href="{{ product.url }}">{{- product.title -}}</a>
+                        </h3>
+                        <div class="f-price f-price--large">
+                          <div class="price">
+                            {%- if product.price_varies -%}
+                              <span class="price-item price-item--regular">From {{ product.price_min | money }}</span>
+                            {%- else -%}
+                              <span class="price-item price-item--regular">{{ product.price | money }}</span>
+                              {%- if product.compare_at_price > product.price -%}
+                                <span class="price-item price-item--sale">{{ product.compare_at_price | money }}</span>
+                              {%- endif -%}
+                            {%- endif -%}
+                          </div>
+                        </div>
+                        {%- if section.settings.pcard_description_display != 'none' -%}
+                          <div class="product-showcase__description rte {{ section.settings.pcard_description_size }}">
+                            <div class="text-limit-{{ section.settings.pcard_description_display }}">
+                              {%- if product.metafields.foxtheme.showcase_description.value != blank -%}
+                                {{ product.metafields.foxtheme.showcase_description.value }}
+                              {%- else -%}
+                                {{- product.description -}}
+                              {%- endif -%}
+                            </div>
+                          </div>
+                        {%- endif -%}
+                        {%- if section.settings.pcard_button_label != blank -%}
+                          <div class="product-showcase__view-details">
+                            <a href="{{ product.url }}" class="btn btn--primary">
+                              {{- section.settings.pcard_button_label -}}
+                            </a>
+                          </div>
+                        {%- endif -%}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              {%- endfor -%}
+            {%- else -%}
+              {%- liquid
+                if image_ratio == 'adapt'
+                  assign image_ratio = '1/1'
+                endif
+              -%}
+              {%- for i in (1..3) -%}
+                <div class="swiper-slide">
+                  <div class="product-showcase grid f-grid-1-cols md:f-grid-2-cols">
+                    <div class="product-showcase__thumbnail">
+                      <div
+                        class="media-wrapper bg-none blocks-radius"
+                        style="--aspect-ratio: {{ image_ratio | default: 1 }}"
+                      >
+                        {{ 'product-1' | placeholder_svg_tag: 'placeholder-svg' }}
+                      </div>
+                    </div>
+                    <div class="product-showcase__info flex items-center">
+                      <div class="product-showcase__info-inner w-full">
+                        {%- if section.settings.pcard_show_vendor -%}
+                          <p class="product-showcase__vendor h5">
+                            <span class="visually-hidden">Vendor</span>
+                            Sample Vendor
+                          </p>
+                        {%- endif -%}
+                        {%- if section.settings.pcard_show_type -%}
+                          <p class="product-showcase__type h5">
+                            <span class="visually-hidden">Product type</span>
+                            Sample Type
+                          </p>
+                        {%- endif -%}
+                        <h3 class="product-showcase__title {{ section.settings.pcard_title_size }}">
+                          Sample Product Title
+                        </h3>
+                        <div class="f-price f-price--large">
+                          <div class="price">
+                            <span class="price-item price-item--regular">$29.99</span>
+                          </div>
+                        </div>
+                        {%- if section.settings.pcard_description_display != 'none' -%}
+                          <div class="product-showcase__description rte {{ section.settings.pcard_description_size }}">
+                            <div class="text-limit-{{ section.settings.pcard_description_display }}">
+                              This is a sample product description. Replace this text with your actual product description.
+                            </div>
+                          </div>
+                        {%- endif -%}
+                        {%- if section.settings.pcard_button_label != blank -%}
+                          <div class="product-showcase__view-details">
+                            <a class="btn btn--primary" disabled>
+                              {{- section.settings.pcard_button_label -}}
+                            </a>
+                          </div>
+                        {%- endif -%}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              {%- endfor -%}
+            {%- endif -%}
+          </div>
+        </div>
+      </products-showcase>
+    </motion-element>
+  </div>
+</div>
+
+<script>
+/* Products Showcase JavaScript */
+if (!customElements.get('products-showcase')) {
+  customElements.define(
+    'products-showcase',
+    class ProductsShowcase extends HTMLElement {
+      constructor() {
+        super();
+      }
+
+      connectedCallback() {
+        this.enableSlider = this.dataset.enableSlider === 'true';
+
+        if (!this.enableSlider) return;
+
+        this.sectionId = this.dataset.sectionId;
+        this.section = this.closest(`.section-${this.sectionId}`);
+        this.sliderInstance = false;
+
+        this.initSlider();
+      }
+
+      initSlider() {
+        const spaceBetween = parseInt(this.dataset.itemGap);
+
+        this.sliderOptions = {
+          slidesPerView: 1,
+          spaceBetween: spaceBetween,
+          navigation: {
+            nextEl: this.section.querySelector('.swiper-button-next'),
+            prevEl: this.section.querySelector('.swiper-button-prev'),
+          },
+          pagination: {
+            el: this.section.querySelector('.swiper-pagination'),
+            clickable: true,
+            type: 'fraction',
+          },
+          breakpoints: {
+            768: {
+              slidesPerView: 'auto',
+            },
+          },
+          autoHeight: true,
+          loop: true,
+          threshold: 2,
+        };
+
+        this.sliderInstance = new window.FoxTheme.Carousel(this.querySelector('.swiper'), this.sliderOptions);
+        this.sliderInstance.init();
+
+        const focusableElements = FoxTheme.a11y.getFocusableElements(this);
+
+        focusableElements.forEach((element) => {
+          element.addEventListener('focusin', () => {
+            const slide = element.closest('.swiper-slide');
+            this.sliderInstance.slider.slideTo(this.sliderInstance.slider.slides.indexOf(slide));
+          });
+        });
+      }
+    }
+  );
+}
+</script>
+
+{% schema %}
+{
+  "name": "Products Showcase",
+  "disabled_on": {
+    "groups": ["header", "footer", "custom.overlay"]
+  },
+  "settings": [
+    {
+      "type": "header",
+      "content": "General"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "default": "scheme-1"
+    },
+    {
+      "type": "header",
+      "content": "Section header"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Products showcase"
+    },
+    {
+      "type": "select",
+      "id": "heading_size",
+      "label": "Heading size",
+      "default": "h2",
+      "options": [
+        {
+          "value": "h6",
+          "label": "Extra Small"
+        },
+        {
+          "value": "h5",
+          "label": "Small"
+        },
+        {
+          "value": "h4",
+          "label": "Medium"
+        },
+        {
+          "value": "h3",
+          "label": "Large"
+        },
+        {
+          "value": "h2",
+          "label": "Extra Large"
+        },
+        {
+          "value": "h1",
+          "label": "XX Large"
+        },
+        {
+          "value": "hd3",
+          "label": "XXX Large"
+        },
+        {
+          "value": "hd2",
+          "label": "XXXX Large"
+        },
+        {
+          "value": "hd1",
+          "label": "XXXXX Large"
+        }
+      ]
+    },
+    {
+      "type": "header",
+      "content": "Highlight text"
+    },
+    {
+      "type": "paragraph",
+      "content": "Add emphasis to specific words by wrapping them in asterisks (*word*)"
+    },
+    {
+      "type": "select",
+      "id": "heading_highlight_style",
+      "label": "Highlight style",
+      "options": [
+        {
+          "value": "none",
+          "label": "None"
+        },
+        {
+          "value": "underline",
+          "label": "Underline"
+        }
+      ]
+    },
+    {
+      "type": "product_list",
+      "id": "products",
+      "label": "Products",
+      "limit": 5
+    },
+    {
+      "type": "header",
+      "content": "Product cards"
+    },
+    {
+      "type": "select",
+      "id": "pcard_title_size",
+      "label": "Title size",
+      "default": "h1",
+      "options": [
+        {
+          "value": "h4",
+          "label": "Medium"
+        },
+        {
+          "value": "h3",
+          "label": "Large"
+        },
+        {
+          "value": "h2",
+          "label": "Extra Large"
+        },
+        {
+          "value": "h1",
+          "label": "XX Large"
+        },
+        {
+          "value": "hd3",
+          "label": "XXX Large"
+        },
+        {
+          "value": "hd2",
+          "label": "XXXX Large"
+        },
+        {
+          "value": "hd1",
+          "label": "XXXXX Large"
+        }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "pcard_description_display",
+      "label": "Description display",
+      "default": "3-lines",
+      "options": [
+        {
+          "value": "none",
+          "label": "None"
+        },
+        {
+          "value": "1-line",
+          "label": "1 line"
+        },
+        {
+          "value": "2-lines",
+          "label": "2 lines"
+        },
+        {
+          "value": "3-lines",
+          "label": "3 lines"
+        }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "pcard_description_size",
+      "label": "Description size",
+      "default": "text-lg",
+      "options": [
+        {
+          "value": "text-sm",
+          "label": "Small"
+        },
+        {
+          "value": "text-base",
+          "label": "Base"
+        },
+        {
+          "value": "text-lg",
+          "label": "Large"
+        }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "pcard_image_ratio",
+      "label": "Image ratio",
+      "default": "",
+      "options": [
+        {
+          "value": "",
+          "label": "Default"
+        },
+        {
+          "value": "adapt",
+          "label": "Adapt to image"
+        },
+        {
+          "value": "1/1",
+          "label": "Square (1:1)"
+        },
+        {
+          "value": "3/4",
+          "label": "Portrait (3:4)"
+        },
+        {
+          "value": "4/3",
+          "label": "Landscape (4:3)"
+        }
+      ]
+    },
+    {
+      "type": "checkbox",
+      "id": "pcard_show_vendor",
+      "label": "Show vendor",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "pcard_show_type",
+      "label": "Show product type",
+      "default": false
+    },
+    {
+      "type": "text",
+      "id": "pcard_button_label",
+      "label": "Button label",
+      "default": "Shop this product"
+    },
+    {
+      "type": "header",
+      "content": "Section padding"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Padding top",
+      "default": 50,
+      "min": 0,
+      "max": 100,
+      "step": 2,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Padding bottom",
+      "default": 50,
+      "min": 0,
+      "max": 100,
+      "step": 2,
+      "unit": "px"
+    },
+    {
+      "type": "header",
+      "content": "Divider"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_section_divider",
+      "default": false,
+      "label": "Show divider"
+    },
+    {
+      "type": "select",
+      "id": "divider_width",
+      "options": [
+        {
+          "value": "fixed",
+          "label": "Fixed"
+        },
+        {
+          "value": "full",
+          "label": "Full"
+        }
+      ],
+      "default": "fixed",
+      "label": "Divider width"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Products Showcase"
+    }
+  ]
+}
+{% endschema %}

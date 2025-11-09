@@ -13,14 +13,49 @@
   "sections": {
     "footer": {
       "type": "footer",
+      "blocks": {
+        "brand_information_VaAAEV": {
+          "type": "brand_information",
+          "settings": {
+            "show_social": true
+          }
+        },
+        "link_list_qUXymB": {
+          "type": "link_list",
+          "settings": {
+            "heading": "Collections",
+            "menu": "collections"
+          }
+        },
+        "link_list_HYYB3N": {
+          "type": "link_list",
+          "settings": {
+            "heading": "Pages",
+            "menu": "header-menu"
+          }
+        },
+        "link_list_kh87xd": {
+          "type": "link_list",
+          "settings": {
+            "heading": "Our Policies",
+            "menu": "our-policies"
+          }
+        }
+      },
+      "block_order": [
+        "brand_information_VaAAEV",
+        "link_list_qUXymB",
+        "link_list_HYYB3N",
+        "link_list_kh87xd"
+      ],
       "settings": {
-        "color_scheme": "scheme-1",
-        "newsletter_enable": true,
+        "color_scheme": "scheme-2",
+        "newsletter_enable": false,
         "newsletter_heading": "Subscribe to our emails",
-        "enable_follow_on_shop": true,
+        "enable_follow_on_shop": false,
         "show_social": true,
-        "enable_country_selector": true,
-        "enable_language_selector": true,
+        "enable_country_selector": false,
+        "enable_language_selector": false,
         "payment_enable": true,
         "show_policy": true,
         "margin_top": 0,

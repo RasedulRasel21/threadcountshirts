@@ -1,0 +1,452 @@
+<style>
+/* Featured Blog CSS */
+.article-card__media {
+  margin-bottom: 2.4rem;
+}
+.article-card__content > * + * {
+  margin: 1.2rem 0 0;
+}
+.article-card__content .article-card__button {
+  margin-top: 2rem;
+}
+</style>
+
+{% liquid
+  assign columns_mobile_int = section.settings.columns_mobile | plus: 0
+  assign enable_swipe_mobile = false
+  if section.settings.swipe_on_mobile and section.settings.post_limit > columns_mobile_int
+    assign enable_swipe_mobile = true
+  endif
+
+  assign columns_desktop = section.settings.columns_desktop
+  assign columns_tablet = columns_desktop
+  if columns_desktop > 3
+    assign columns_tablet = columns_desktop | divided_by: 2.0 | ceil
+  endif
+
+  assign show_date = section.settings.show_date
+  assign show_excerpt = section.settings.show_excerpt
+  assign show_button = section.settings.show_button
+
+  assign section_header_alignment = settings.section_header_alignment
+  assign section_header_alignment_mobile = settings.section_header_alignment_mobile
+  if section_header_alignment_mobile == 'inherit'
+    assign section_header_alignment_mobile = section_header_alignment
+  endif
+
+  assign motion_delay = 50
+%}
+
+{%- if section.settings.show_section_divider -%}
+  <div class="section-divider{% if section.settings.divider_width == 'fixed' %} page-width{% endif %}">
+    <div class="border-top no-empty"></div>
+  </div>
+{%- endif -%}
+
+<div
+  class="section section--padding featured-blog color-{{ section.settings.color_scheme }}"
+  style="--section-padding-top: {{ section.settings.padding_top }}px;--section-padding-bottom: {{ section.settings.padding_bottom }}px;"
+>
+  <div class="page-width">
+    {%- if section.settings.heading != blank or section.settings.subheading != blank or section.settings.description != blank -%}
+      <div class="section__header section__header--vertical spacing--normal">
+        <div class="section__header--text text-center">
+          {%- if section.settings.subheading != blank -%}
+            <p class="section__subheading text-subheading">{{ section.settings.subheading }}</p>
+          {%- endif -%}
+          {%- if section.settings.heading != blank -%}
+            <h2 class="section__heading {{ section.settings.heading_size }}">{{ section.settings.heading }}</h2>
+          {%- endif -%}
+          {%- if section.settings.description != blank -%}
+            <div class="section__description rte">{{ section.settings.description }}</div>
+          {%- endif -%}
+        </div>
+      </div>
+    {%- endif -%}
+    <motion-element
+      class="featured-blog__wrapper block f-grid--gap-{{ section.settings.column_gap }}{% if enable_swipe_mobile %} swipe-mobile swipe-mobile--{{ section.settings.columns_mobile }}-cols{% endif %}"
+      data-motion-delay="{{ motion_delay }}"
+    >
+      <div class="featured-blog__items f-grid f-grid-{{ columns_mobile_int }}-cols md:f-grid-{{ columns_tablet }}-cols lg:f-grid-{{ columns_desktop }}-cols{% if enable_swipe_mobile %} swipe-mobile__inner{% endif %}">
+        {%- if section.settings.blog != blank and section.settings.blog.articles_count > 0 -%}
+          {%- for article in section.settings.blog.articles limit: section.settings.post_limit -%}
+            <div class="f-column">
+              <article class="article-card">
+                {%- if article.image -%}
+                  <div class="article-card__media">
+                    <a href="{{ article.url }}">
+                      {{ article.image | image_url: width: 1000 | image_tag: loading: 'lazy', widths: '360, 535, 720, 1000' }}
+                    </a>
+                  </div>
+                {%- endif -%}
+                <div class="article-card__content">
+                  {%- if show_date and article.published_at -%}
+                    <time class="article-card__date" datetime="{{ article.published_at | date: '%Y-%m-%d' }}">
+                      {{ article.published_at | date: '%B %d, %Y' }}
+                    </time>
+                  {%- endif -%}
+                  <h3 class="article-card__title {{ section.settings.card_title_size }}">
+                    <a href="{{ article.url }}">{{ article.title }}</a>
+                  </h3>
+                  {%- if show_excerpt and article.excerpt != blank -%}
+                    <div class="article-card__excerpt rte">{{ article.excerpt | strip_html | truncatewords: 30 }}</div>
+                  {%- endif -%}
+                  {%- if show_button -%}
+                    <div class="article-card__button">
+                      <a href="{{ article.url }}" class="btn btn--underline">Read more</a>
+                    </div>
+                  {%- endif -%}
+                </div>
+              </article>
+            </div>
+          {%- endfor -%}
+        {% else %}
+          {% for i in (1..section.settings.post_limit) -%}
+            <div class="f-column">
+              <article class="article-card">
+                <div class="article-card__media">
+                  {{ 'image' | placeholder_svg_tag: 'placeholder-svg' }}
+                </div>
+                <div class="article-card__content">
+                  {%- if show_date -%}
+                    <time class="article-card__date">January 1, 2024</time>
+                  {%- endif -%}
+                  <h3 class="article-card__title {{ section.settings.card_title_size }}">
+                    Sample Blog Post Title
+                  </h3>
+                  {%- if show_excerpt -%}
+                    <div class="article-card__excerpt rte">This is a sample blog post excerpt. Your blog post content will appear here.</div>
+                  {%- endif -%}
+                  {%- if show_button -%}
+                    <div class="article-card__button">
+                      <span class="btn btn--underline" disabled>Read more</span>
+                    </div>
+                  {%- endif -%}
+                </div>
+              </article>
+            </div>
+          {%- endfor -%}
+        {% endif %}
+      </div>
+    </motion-element>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Featured Blog",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "General"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "default": "scheme-1"
+    },
+    {
+      "type": "header",
+      "content": "Section header"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "heading",
+      "default": "Blog posts",
+      "label": "Heading"
+    },
+    {
+      "type": "select",
+      "id": "heading_size",
+      "label": "Heading size",
+      "default": "h1",
+      "options": [
+        {
+          "value": "h6",
+          "label": "Extra Small"
+        },
+        {
+          "value": "h5",
+          "label": "Small"
+        },
+        {
+          "value": "h4",
+          "label": "Medium"
+        },
+        {
+          "value": "h3",
+          "label": "Large"
+        },
+        {
+          "value": "h2",
+          "label": "Extra Large"
+        },
+        {
+          "value": "h1",
+          "label": "XX Large"
+        },
+        {
+          "value": "hd3",
+          "label": "XXX Large"
+        },
+        {
+          "value": "hd2",
+          "label": "XXXX Large"
+        },
+        {
+          "value": "hd1",
+          "label": "XXXXX Large"
+        }
+      ]
+    },
+    {
+      "type": "header",
+      "content": "Highlight text"
+    },
+    {
+      "type": "paragraph",
+      "content": "Add emphasis to specific words by wrapping them in asterisks (*word*)"
+    },
+    {
+      "type": "select",
+      "id": "heading_highlight_style",
+      "label": "Highlight style",
+      "options": [
+        {
+          "value": "none",
+          "label": "None"
+        },
+        {
+          "value": "underline",
+          "label": "Underline"
+        }
+      ]
+    },
+    {
+      "type": "text",
+      "id": "subheading",
+      "label": "Subheading"
+    },
+    {
+      "type": "richtext",
+      "id": "description",
+      "label": "Description"
+    },
+    {
+      "type": "header",
+      "content": "Blog settings"
+    },
+    {
+      "type": "blog",
+      "id": "blog",
+      "label": "Blog"
+    },
+    {
+      "type": "range",
+      "id": "post_limit",
+      "min": 2,
+      "max": 8,
+      "step": 1,
+      "default": 3,
+      "label": "Number of posts to show"
+    },
+    {
+      "type": "header",
+      "content": "Grid"
+    },
+    {
+      "type": "range",
+      "id": "columns_desktop",
+      "min": 1,
+      "max": 4,
+      "step": 1,
+      "default": 3,
+      "label": "Desktop columns"
+    },
+    {
+      "type": "select",
+      "id": "column_gap",
+      "options": [
+        {
+          "value": "none",
+          "label": "None"
+        },
+        {
+          "value": "extra-small",
+          "label": "Extra small"
+        },
+        {
+          "value": "small",
+          "label": "Small"
+        },
+        {
+          "value": "medium",
+          "label": "Medium"
+        },
+        {
+          "value": "large",
+          "label": "Large"
+        },
+        {
+          "value": "extra-large",
+          "label": "Extra large"
+        }
+      ],
+      "default": "medium",
+      "label": "Column gap"
+    },
+    {
+      "type": "header",
+      "content": "Mobile"
+    },
+    {
+      "type": "select",
+      "id": "columns_mobile",
+      "options": [
+        {
+          "value": "1",
+          "label": "1 column"
+        },
+        {
+          "value": "2",
+          "label": "2 columns"
+        }
+      ],
+      "default": "1",
+      "label": "Mobile columns"
+    },
+    {
+      "type": "checkbox",
+      "id": "swipe_on_mobile",
+      "default": true,
+      "label": "Enable swipe on mobile"
+    },
+    {
+      "type": "header",
+      "content": "Card settings"
+    },
+    {
+      "type": "select",
+      "id": "card_title_size",
+      "label": "Card title size",
+      "default": "h3",
+      "options": [
+        {
+          "value": "h6",
+          "label": "Extra Small"
+        },
+        {
+          "value": "h5",
+          "label": "Small"
+        },
+        {
+          "value": "h4",
+          "label": "Medium"
+        },
+        {
+          "value": "h3",
+          "label": "Large"
+        },
+        {
+          "value": "h2",
+          "label": "Extra Large"
+        },
+        {
+          "value": "h1",
+          "label": "XX Large"
+        },
+        {
+          "value": "hd3",
+          "label": "XXX Large"
+        },
+        {
+          "value": "hd2",
+          "label": "XXXX Large"
+        },
+        {
+          "value": "hd1",
+          "label": "XXXXX Large"
+        }
+      ]
+    },
+    {
+      "type": "checkbox",
+      "id": "show_date",
+      "default": true,
+      "label": "Show date"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_excerpt",
+      "default": true,
+      "label": "Show excerpt"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_button",
+      "default": true,
+      "label": "Show read more button"
+    },
+    {
+      "type": "header",
+      "content": "Section padding"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 2,
+      "unit": "px",
+      "label": "Padding top",
+      "default": 50
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 2,
+      "unit": "px",
+      "label": "Padding bottom",
+      "default": 50
+    },
+    {
+      "type": "header",
+      "content": "Divider"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_section_divider",
+      "default": false,
+      "label": "Show divider"
+    },
+    {
+      "type": "select",
+      "id": "divider_width",
+      "options": [
+        {
+          "value": "fixed",
+          "label": "Fixed"
+        },
+        {
+          "value": "full",
+          "label": "Full"
+        }
+      ],
+      "default": "fixed",
+      "label": "Divider width"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Featured Blog"
+    }
+  ],
+  "disabled_on": {
+    "groups": ["footer", "header", "custom.overlay"]
+  }
+}
+{% endschema %}
