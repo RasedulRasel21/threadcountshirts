@@ -1,3 +1,9 @@
+<style>
+#price-{{ section.id }}{
+  display: flex;
+}
+
+</style>
 <product-info
   id="MainProduct-{{ section.id }}"
   class="section-{{ section.id }}-padding gradient color-{{ section.settings.color_scheme }}"
@@ -36,6 +42,42 @@
         padding-top: {{ section.settings.padding_top }}px;
         padding-bottom: {{ section.settings.padding_bottom }}px;
       }
+    }
+
+    /* Custom Design Properties Styles */
+    .product-form__input--pill input[type="radio"] {
+      position: absolute;
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    .product-form__input--pill input[type="radio"]:checked + label {
+      background-color: rgb(var(--color-foreground));
+      color: rgb(var(--color-background));
+      border-color: rgb(var(--color-foreground));
+    }
+
+    .product-form__input--pill .product-form__input-wrapper {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .text-area {
+      width: 100%;
+      padding: 1rem;
+      border: 1px solid rgba(var(--color-foreground), 0.2);
+      border-radius: 0.5rem;
+      font-family: inherit;
+      font-size: 1.4rem;
+      resize: vertical;
+      min-height: 100px;
+    }
+
+    .text-area:focus {
+      outline: none;
+      border-color: rgba(var(--color-foreground), 0.5);
     }
   {%- endstyle -%}
 
@@ -113,6 +155,7 @@
                     show_badges: true,
                     price_class: 'price--large'
                   -%}
+                  <span class="price-per-item-suffix" style="font-size: 1.6rem; color: rgba(var(--color-foreground), 0.75); margin-left: 0.5rem;">/item</span>
                 </div>
                 {%- if product.quantity_price_breaks_configured? -%}
                   <div class="volume-pricing-note" id="Volume-Note-{{ section.id }}">
@@ -271,20 +314,26 @@
                           {{- 'icon-minus.svg' | inline_asset_content -}}
                         </span>
                       </button>
+                      {%- liquid
+                        assign min_quantity = 12
+                        if product.selected_or_first_available_variant.quantity_rule.min > min_quantity
+                          assign min_quantity = product.selected_or_first_available_variant.quantity_rule.min
+                        endif
+                      -%}
                       <input
                         class="quantity__input"
                         type="number"
                         name="quantity"
                         id="Quantity-{{ section.id }}"
                         data-cart-quantity="{{ cart_qty }}"
-                        data-min="{{ product.selected_or_first_available_variant.quantity_rule.min }}"
-                        min="{{ product.selected_or_first_available_variant.quantity_rule.min }}"
+                        data-min="{{ min_quantity }}"
+                        min="{{ min_quantity }}"
                         {% if product.selected_or_first_available_variant.quantity_rule.max != null %}
                           data-max="{{ product.selected_or_first_available_variant.quantity_rule.max }}"
                           max="{{ product.selected_or_first_available_variant.quantity_rule.max }}"
                         {% endif %}
                         step="{{ product.selected_or_first_available_variant.quantity_rule.increment }}"
-                        value="{{ product.selected_or_first_available_variant.quantity_rule.min }}"
+                        value="{{ min_quantity }}"
                         form="{{ product_form_id }}"
                       >
                       <button class="quantity__button" name="plus" type="button">
@@ -298,7 +347,7 @@
                     </quantity-input>
                     {%- liquid
                       assign volume_pricing_array = product.selected_or_first_available_variant.quantity_price_breaks | sort: 'quantity' | reverse
-                      assign current_qty_for_volume_pricing = cart_qty | plus: product.selected_or_first_available_variant.quantity_rule.min
+                      assign current_qty_for_volume_pricing = cart_qty | plus: min_quantity
                       if cart_qty > 0
                         assign current_qty_for_volume_pricing = cart_qty | plus: product.selected_or_first_available_variant.quantity_rule.increment
                       endif
@@ -393,11 +442,11 @@
                         -}}
                       </span>
                     {%- endif -%}
-                    {%- if product.selected_or_first_available_variant.quantity_rule.min > 1 -%}
+                    {%- if min_quantity > 1 -%}
                       <span class="divider">
                         {{-
                           'products.product.quantity.minimum_of'
-                          | t: quantity: product.selected_or_first_available_variant.quantity_rule.min
+                          | t: quantity: min_quantity
                         -}}
                       </span>
                     {%- endif -%}
@@ -416,7 +465,7 @@
                         <span class="caption-large">{{ 'products.product.volume_pricing.title' | t }}</span>
                         <ul class="list-unstyled">
                           <li>
-                            <span>{{ product.selected_or_first_available_variant.quantity_rule.min }}+</span>
+                            <span>{{ min_quantity }}+</span>
                             {%- assign price = product.selected_or_first_available_variant.price
                               | money_with_currency
                             -%}
@@ -477,6 +526,71 @@
 
               {%- when 'variant_picker' -%}
                 {% render 'product-variant-picker', product: product, block: block, product_form_id: product_form_id %}
+
+              {%- when 'turnaround_time' -%}
+                <div class="product-form__input product-form__input--pill" {{ block.shopify_attributes }}>
+                  <fieldset class="js product-form__input">
+                    <legend class="form__label">{{ block.settings.heading | default: "TURNAROUND TIME" }}</legend>
+                    <div class="product-form__input-wrapper">
+                      <input
+                        type="radio"
+                        id="turnaround-standard-{{ section.id }}"
+                        name="properties[Turnaround Time]"
+                        value="STANDARD - 14 DAYS"
+                        form="{{ product_form_id }}"
+                        checked
+                      >
+                      <label for="turnaround-standard-{{ section.id }}">
+                        STANDARD - 14 DAYS
+                      </label>
+
+                      <input
+                        type="radio"
+                        id="turnaround-rush-{{ section.id }}"
+                        name="properties[Turnaround Time]"
+                        value="RUSH - 7 DAYS"
+                        form="{{ product_form_id }}"
+                      >
+                      <label for="turnaround-rush-{{ section.id }}">
+                        RUSH - 7 DAYS
+                      </label>
+                    </div>
+                  </fieldset>
+                </div>
+
+              {%- when 'special_instructions' -%}
+                <div class="product-form__input" {{ block.shopify_attributes }}>
+                  <label class="form__label" for="special-instructions-{{ section.id }}">
+                    {{ block.settings.heading | default: "SPECIAL INSTRUCTIONS" }}
+                  </label>
+                  <textarea
+                    id="special-instructions-{{ section.id }}"
+                    name="properties[Special Instructions]"
+                    class="text-area text-area--resize-vertical"
+                    form="{{ product_form_id }}"
+                    placeholder="{{ block.settings.placeholder | default: 'Enter any special instructions here...' }}"
+                    rows="4"
+                  ></textarea>
+                </div>
+
+              {%- when 'total_price' -%}
+                <div class="product-total-price" id="total-price-{{ section.id }}" {{ block.shopify_attributes }}>
+                  <div class="total-price-wrapper" style="padding: 2rem 0; border-top: 1px solid rgba(var(--color-foreground), 0.1); border-bottom: 1px solid rgba(var(--color-foreground), 0.1); margin: 2rem 0;">
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                      <span class="total-price-label" style="font-size: 2rem; font-weight: 600; color: rgb(var(--color-foreground));">
+                        {{ block.settings.heading | default: "Total Price" }}
+                      </span>
+                      <span class="total-price-amount" id="total-price-amount-{{ section.id }}" style="font-size: 2.4rem; font-weight: 700; color: rgb(var(--color-foreground));" data-product-price="{{ product.selected_or_first_available_variant.price }}">
+                        {%- assign initial_total = product.selected_or_first_available_variant.price | times: 12 -%}
+                        {{ initial_total | money }}
+                      </span>
+                    </div>
+                    <div style="margin-top: 0.5rem; font-size: 1.4rem; color: rgba(var(--color-foreground), 0.7);">
+                      <span id="total-price-calculation-{{ section.id }}">12 items × {{ product.selected_or_first_available_variant.price | money }}</span>
+                    </div>
+                  </div>
+                </div>
+
               {%- when 'buy_buttons' -%}
                 {%- render 'buy-buttons',
                   block: block,
@@ -736,6 +850,152 @@
       {{ product | structured_data }}
     </script>
   </div>
+
+  <script>
+    // Quantity validation - minimum 12
+    (function() {
+      const sectionId = '{{ section.id }}';
+      const minQuantity = 12;
+
+      function initQuantityValidation() {
+        const quantityInput = document.getElementById('Quantity-' + sectionId);
+        const submitButton = document.getElementById('ProductSubmitButton-' + sectionId);
+
+        if (!quantityInput || !submitButton) {
+          console.log('Quantity input or submit button not found');
+          return;
+        }
+
+        // Function to validate and update button state
+        function validateQuantity() {
+          const quantity = parseInt(quantityInput.value) || 0;
+          const isValid = quantity >= minQuantity;
+
+          console.log('Quantity validation:', { quantity, minQuantity, isValid });
+
+          if (!isValid) {
+            submitButton.disabled = true;
+            submitButton.style.opacity = '0.5';
+            submitButton.style.cursor = 'not-allowed';
+          } else {
+            // Only enable if product is available
+            const isProductAvailable = !submitButton.hasAttribute('data-disabled-by-availability');
+            if (isProductAvailable) {
+              submitButton.disabled = false;
+              submitButton.style.opacity = '1';
+              submitButton.style.cursor = 'pointer';
+            }
+          }
+        }
+
+        // Check initial availability and mark button
+        if (submitButton.disabled) {
+          submitButton.setAttribute('data-disabled-by-availability', 'true');
+        }
+
+        // Validate on page load
+        validateQuantity();
+
+        // Add event listeners
+        quantityInput.addEventListener('input', validateQuantity);
+        quantityInput.addEventListener('change', validateQuantity);
+        quantityInput.addEventListener('keyup', validateQuantity);
+
+        // Prevent form submission if quantity is less than minimum
+        const productForm = document.getElementById('product-form-' + sectionId);
+        if (productForm) {
+          productForm.addEventListener('submit', function(e) {
+            const quantity = parseInt(quantityInput.value) || 0;
+            if (quantity < minQuantity) {
+              e.preventDefault();
+              alert('Minimum order quantity is ' + minQuantity + ' items.');
+              quantityInput.focus();
+              return false;
+            }
+          });
+        }
+
+        console.log('Quantity validation initialized');
+      }
+
+      // Initialize when DOM is ready
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initQuantityValidation);
+      } else {
+        initQuantityValidation();
+      }
+
+      // Re-validate when variant changes
+      document.addEventListener('variant:change', function() {
+        setTimeout(initQuantityValidation, 100);
+      });
+    })();
+
+    // Total Price Calculator
+    (function() {
+      const sectionId = '{{ section.id }}';
+
+      function initTotalPriceCalculator() {
+        const quantityInput = document.getElementById('Quantity-' + sectionId);
+        const totalPriceAmount = document.getElementById('total-price-amount-' + sectionId);
+        const totalPriceCalculation = document.getElementById('total-price-calculation-' + sectionId);
+
+        if (!quantityInput || !totalPriceAmount) {
+          console.log('Total price elements not found');
+          return;
+        }
+
+        // Get the price from data attribute (in cents)
+        let currentPrice = parseInt(totalPriceAmount.getAttribute('data-product-price')) || 0;
+
+        function updateTotalPrice() {
+          const quantity = parseInt(quantityInput.value) || 0;
+          const totalInCents = currentPrice * quantity;
+
+          // Format the total price
+          const formattedTotal = (totalInCents / 100).toFixed(2);
+          const formattedUnit = (currentPrice / 100).toFixed(2);
+
+          // Update display
+          totalPriceAmount.textContent = '$' + formattedTotal;
+
+          if (totalPriceCalculation) {
+            totalPriceCalculation.textContent = quantity + ' items × $' + formattedUnit;
+          }
+
+          console.log('Total price updated:', { quantity, totalInCents, formattedTotal });
+        }
+
+        // Update on quantity change
+        quantityInput.addEventListener('input', updateTotalPrice);
+        quantityInput.addEventListener('change', updateTotalPrice);
+
+        // Update on variant change
+        document.addEventListener('variant:change', function(event) {
+          setTimeout(function() {
+            // Re-get price from updated data attribute
+            const newPriceAttr = totalPriceAmount.getAttribute('data-product-price');
+            if (newPriceAttr) {
+              currentPrice = parseInt(newPriceAttr);
+              updateTotalPrice();
+            }
+          }, 100);
+        });
+
+        // Initial update
+        updateTotalPrice();
+
+        console.log('Total price calculator initialized');
+      }
+
+      // Initialize when DOM is ready
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initTotalPriceCalculator);
+      } else {
+        initTotalPriceCalculator();
+      }
+    })();
+  </script>
 </product-info>
 
 {% schema %}
@@ -904,6 +1164,51 @@
             }
           ],
           "default": "circle"
+        }
+      ]
+    },
+    {
+      "type": "turnaround_time",
+      "name": "Turnaround Time",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "text",
+          "id": "heading",
+          "label": "Heading",
+          "default": "TURNAROUND TIME"
+        }
+      ]
+    },
+    {
+      "type": "special_instructions",
+      "name": "Special Instructions",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "text",
+          "id": "heading",
+          "label": "Heading",
+          "default": "SPECIAL INSTRUCTIONS"
+        },
+        {
+          "type": "text",
+          "id": "placeholder",
+          "label": "Placeholder Text",
+          "default": "Enter any special instructions here..."
+        }
+      ]
+    },
+    {
+      "type": "total_price",
+      "name": "Total Price",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "text",
+          "id": "heading",
+          "label": "Heading",
+          "default": "TOTAL PRICE"
         }
       ]
     },
@@ -2094,6 +2399,13 @@
       "id": "enable_sticky_info",
       "default": true,
       "label": "t:sections.main-product.settings.enable_sticky_info.label"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_custom_design",
+      "default": false,
+      "label": "Enable custom design upload",
+      "info": "Show drag & drop canvas for custom t-shirt design upload"
     },
     {
       "type": "color_scheme",

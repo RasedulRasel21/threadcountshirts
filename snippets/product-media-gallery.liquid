@@ -154,6 +154,48 @@
       </button>
     </div>
   </slider-component>
+
+  {%- if section.settings.enable_custom_design -%}
+    {%- comment -%} Custom Design Canvas with Fabric.js - Outside slider {%- endcomment -%}
+    <div id="tshirt-div-{{ section.id }}" class="tshirt-container-fixed">
+      <div id="drawingArea-{{ section.id }}" class="drawing-area">
+        <button type="button" class="canvas-delete-button" id="canvasDelete-{{ section.id }}" title="Remove design">
+          ×
+        </button>
+        <div class="canvas-container">
+          <canvas id="tshirt-canvas-{{ section.id }}"></canvas>
+        </div>
+      </div>
+
+      {%- comment -%} Upload Controls Overlay {%- endcomment -%}
+      <div class="upload-controls-overlay" id="uploadControls-{{ section.id }}">
+        <div class="upload-area" id="uploadArea-{{ section.id }}">
+          <div class="upload-content">
+            <p class="upload-text">Drag & Drop<br>Artwork Here</p>
+            <p class="upload-or">OR</p>
+            <button type="button" class="upload-button" id="uploadButton-{{ section.id }}">
+              UPLOAD FILE(S)
+            </button>
+            <p class="upload-formats">PNG, JPG, SVG, PDF, AI, EPS</p>
+          </div>
+        </div>
+      </div>
+
+      <input
+        type="file"
+        id="tshirt-custompicture-{{ section.id }}"
+        accept=".png,.jpg,.jpeg,.svg,.pdf,.ai,.eps"
+        style="display: none;"
+      >
+      <input
+        type="hidden"
+        id="design-data-{{ section.id }}"
+        name="properties[Design Data]"
+        form="product-form-{{ section.id }}"
+      >
+    </div>
+  {%- endif -%}
+
   {%- if first_3d_model -%}
     <button
       class="button button--full-width product__xr-button"
@@ -330,3 +372,590 @@
     </slider-component>
   {%- endif -%}
 </media-gallery>
+
+{%- if section.settings.enable_custom_design -%}
+  {%- comment -%} Load Fabric.js Library {%- endcomment -%}
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/5.3.0/fabric.min.js"></script>
+
+  <style>
+    .tshirt-container-fixed {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 100;
+    }
+
+    .drawing-area {
+      position: absolute;
+      top: 100px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 10;
+      width: 300px;
+      height: 400px;
+      pointer-events: auto;
+      border: 3px dashed #c41e3a;
+      border-radius: 8px;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.3s ease, visibility 0.3s ease;
+    }
+
+    .drawing-area.visible {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .canvas-container {
+      width: 300px;
+      height: 400px;
+      position: relative;
+      user-select: none;
+    }
+
+    #tshirt-canvas-{{ section.id }} {
+      position: absolute;
+      width: 300px;
+      height: 400px;
+      left: 0px;
+      top: 0px;
+      user-select: none;
+      cursor: default;
+    }
+
+    .upload-controls-overlay {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 80%;
+      max-width: 350px;
+      z-index: 999;
+      pointer-events: auto;
+      opacity: 1;
+      visibility: visible;
+      transition: opacity 0.3s ease, visibility 0.3s ease;
+    }
+
+    .upload-controls-overlay.has-design {
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+    }
+
+    .canvas-delete-button {
+      position: absolute;
+      top: -15px;
+      right: -15px;
+      width: 40px;
+      height: 40px;
+      background-color: #c41e3a;
+      border: 3px solid #fff;
+      border-radius: 50%;
+      color: #fff;
+      font-size: 24px;
+      font-weight: bold;
+      cursor: pointer;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+      transition: all 0.3s ease;
+    }
+
+    .canvas-delete-button:hover {
+      background-color: #a01729;
+      transform: scale(1.1);
+    }
+
+    .canvas-delete-button.visible {
+      display: flex;
+    }
+
+    .upload-area {
+      border: 3px dashed #d4a574;
+      background-color: rgba(60, 60, 60, 0.85);
+      padding: 40px 20px;
+      text-align: center;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .upload-area:hover,
+    .upload-area.drag-over {
+      background-color: rgba(60, 60, 60, 0.95);
+      border-color: #e8b87e;
+    }
+
+    .upload-content {
+      pointer-events: none;
+    }
+
+    .upload-text {
+      color: #ffffff;
+      font-size: 20px;
+      font-weight: 500;
+      margin: 0 0 15px 0;
+      line-height: 1.3;
+    }
+
+    .upload-or {
+      color: #ffffff;
+      font-size: 14px;
+      margin: 10px 0;
+    }
+
+    .upload-button {
+      background-color: #c41e3a;
+      color: #ffffff;
+      border: none;
+      padding: 12px 30px;
+      font-size: 14px;
+      font-weight: 600;
+      border-radius: 4px;
+      cursor: pointer;
+      pointer-events: auto;
+      transition: background-color 0.3s ease;
+      letter-spacing: 0.5px;
+    }
+
+    .upload-button:hover {
+      background-color: #a01729;
+    }
+
+    .upload-formats {
+      color: #cccccc;
+      font-size: 12px;
+      margin: 15px 0 0 0;
+    }
+
+    @media screen and (max-width: 749px) {
+      .product__column-sticky{
+        position: relative;
+      }
+      .drawing-area {
+        top: 60px;
+        width: 175px;
+        height: 200px;
+      }
+
+      .canvas-container {
+        width: 175px !important;
+        height: 200px !important;
+      }
+
+      #tshirt-canvas-{{ section.id }} {
+        width: 175px !important;
+        height: 200px !important;
+      }
+
+      .upload-controls-overlay {
+        width: 50%;
+        max-width: 250px;
+      }
+
+      .upload-area {
+        padding: 25px 15px;
+      }
+
+      .upload-text {
+        font-size: 14px;
+        margin: 0 0 8px 0;
+      }
+
+      .upload-or {
+        font-size: 11px;
+        margin: 8px 0;
+      }
+
+      .upload-button {
+        padding: 10px 20px;
+        font-size: 11px;
+      }
+
+      .upload-formats {
+        font-size: 9px;
+        margin: 8px 0 0 0;
+      }
+
+      .canvas-delete-button {
+        width: 32px;
+        height: 32px;
+        font-size: 20px;
+        top: -12px;
+        right: -12px;
+      }
+    }
+
+    @media screen and (min-width: 750px) and (max-width: 1149px) {
+      .drawing-area {
+        top: 65px;
+        width: 200px;
+        height: 250px;
+      }
+
+      .canvas-container {
+        width: 200px;
+        height: 250px;
+      }
+
+      #tshirt-canvas-{{ section.id }} {
+        width: 200px;
+        height: 250px;
+      }
+
+      .upload-controls-overlay {
+        width: 55%;
+        max-width: 280px;
+      }
+
+      .upload-area {
+        padding: 20px 15px;
+      }
+
+      .upload-text {
+        font-size: 15px;
+        margin: 0 0 10px 0;
+      }
+
+      .upload-or {
+        font-size: 12px;
+        margin: 8px 0;
+      }
+
+      .upload-button {
+        padding: 12px 24px;
+        font-size: 12px;
+      }
+
+      .upload-formats {
+        font-size: 10px;
+        margin: 10px 0 0 0;
+      }
+
+      .canvas-delete-button {
+        width: 36px;
+        height: 36px;
+        font-size: 22px;
+        top: -13px;
+        right: -13px;
+      }
+    }
+  </style>
+
+  <script>
+    (function() {
+      const sectionId = '{{ section.id }}';
+      const canvasId = 'tshirt-canvas-' + sectionId;
+
+      // Global reference to prevent re-initialization
+      if (window['customDesignCanvas_' + sectionId]) {
+        console.log('Canvas already initialized for section:', sectionId);
+        return;
+      }
+
+      // Wait for DOM to be fully loaded
+      function initializeCustomDesign() {
+        // Get all required elements
+        const uploadArea = document.getElementById('uploadArea-' + sectionId);
+        const uploadButton = document.getElementById('uploadButton-' + sectionId);
+        const fileInput = document.getElementById('tshirt-custompicture-' + sectionId);
+        const uploadControls = document.getElementById('uploadControls-' + sectionId);
+        const designDataInput = document.getElementById('design-data-' + sectionId);
+        const deleteButton = document.getElementById('canvasDelete-' + sectionId);
+        const drawingArea = document.getElementById('drawingArea-' + sectionId);
+
+        console.log('Custom Design Init:', {
+          uploadArea: !!uploadArea,
+          uploadButton: !!uploadButton,
+          fileInput: !!fileInput,
+          uploadControls: !!uploadControls,
+          designDataInput: !!designDataInput,
+          deleteButton: !!deleteButton,
+          drawingArea: !!drawingArea
+        });
+
+        if (!uploadArea || !fileInput || !uploadButton || !drawingArea) {
+          console.error('Required elements not found');
+          return;
+        }
+
+        // Wait for Fabric.js to load
+        function initCanvas() {
+          if (typeof fabric === 'undefined') {
+            setTimeout(initCanvas, 100);
+            return;
+          }
+
+          console.log('Fabric.js loaded, initializing canvas');
+
+          // Get responsive canvas dimensions
+          function getCanvasDimensions() {
+            const screenWidth = window.innerWidth;
+            if (screenWidth <= 749) {
+              // Mobile
+              return { width: 175, height: 200, maxWidth: 155, maxHeight: 180 };
+            } else if (screenWidth >= 750 && screenWidth <= 1149) {
+              // Tablet
+              return { width: 200, height: 250, maxWidth: 180, maxHeight: 230 };
+            } else {
+              // Desktop
+              return { width: 300, height: 400, maxWidth: 280, maxHeight: 380 };
+            }
+          }
+
+          const canvasDims = getCanvasDimensions();
+
+          // Initialize Fabric.js canvas with responsive dimensions
+          const canvas = new fabric.Canvas(canvasId, {
+            backgroundColor: 'transparent',
+            width: canvasDims.width,
+            height: canvasDims.height
+          });
+
+          // Store canvas globally to prevent re-initialization
+          window['customDesignCanvas_' + sectionId] = canvas;
+
+          // Update UI based on canvas state
+          function updateCanvasUI() {
+            const hasDesign = canvas.getObjects().length > 0;
+
+            if (hasDesign) {
+              // Hide upload controls
+              if (uploadControls) {
+                uploadControls.classList.add('has-design');
+              }
+              // Show drawing area
+              if (drawingArea) {
+                drawingArea.classList.add('visible');
+              }
+              // Show delete button
+              if (deleteButton) {
+                deleteButton.classList.add('visible');
+              }
+            } else {
+              // Show upload controls
+              if (uploadControls) {
+                uploadControls.classList.remove('has-design');
+              }
+              // Hide drawing area
+              if (drawingArea) {
+                drawingArea.classList.remove('visible');
+              }
+              // Hide delete button
+              if (deleteButton) {
+                deleteButton.classList.remove('visible');
+              }
+            }
+          }
+
+          // Save canvas data to hidden input
+          function saveCanvasData() {
+            try {
+              const dataURL = canvas.toDataURL({
+                format: 'png',
+                quality: 1
+              });
+              if (designDataInput) {
+                designDataInput.value = dataURL;
+              }
+            } catch (error) {
+              console.error('Error saving canvas data:', error);
+            }
+          }
+
+          // Clear canvas and reset UI
+          function clearCanvas() {
+            canvas.clear();
+            canvas.renderAll();
+            updateCanvasUI();
+            saveCanvasData();
+            console.log('Canvas cleared');
+          }
+
+          // Handle file upload and add to canvas
+          function handleFile(file) {
+            console.log('Handling file:', file.name, file.type);
+
+            if (!file.type.match('image.*')) {
+              alert('Please upload an image file (PNG, JPG, SVG)');
+              return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = function(event) {
+              const imgObj = new Image();
+              imgObj.src = event.target.result;
+
+              imgObj.onload = function() {
+                const img = new fabric.Image(imgObj);
+
+                // Get current canvas dimensions for responsive scaling
+                const currentDims = getCanvasDimensions();
+                const scale = Math.min(currentDims.maxWidth / img.width, currentDims.maxHeight / img.height);
+
+                img.scale(scale);
+                canvas.centerObject(img);
+                canvas.add(img);
+                canvas.setActiveObject(img);
+                canvas.renderAll();
+
+                // Update UI
+                updateCanvasUI();
+
+                // Save canvas data
+                saveCanvasData();
+
+                console.log('Image added to canvas');
+              };
+            };
+            reader.readAsDataURL(file);
+          }
+
+          // Click on button to upload
+          uploadButton.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            console.log('Upload button clicked');
+            fileInput.click();
+          });
+
+          // Click on area to upload
+          uploadArea.addEventListener('click', function(e) {
+            // Don't trigger if clicking the button
+            if (e.target !== uploadButton && !uploadButton.contains(e.target)) {
+              console.log('Upload area clicked');
+              fileInput.click();
+            }
+          });
+
+          // Drag and drop events on the upload area
+          uploadArea.addEventListener('dragenter', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            uploadArea.classList.add('drag-over');
+          });
+
+          uploadArea.addEventListener('dragover', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            uploadArea.classList.add('drag-over');
+          });
+
+          uploadArea.addEventListener('dragleave', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            // Only remove if actually leaving the upload area
+            if (e.target === uploadArea) {
+              uploadArea.classList.remove('drag-over');
+            }
+          });
+
+          uploadArea.addEventListener('drop', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            uploadArea.classList.remove('drag-over');
+
+            console.log('File dropped');
+
+            const files = e.dataTransfer.files;
+            if (files.length > 0) {
+              handleFile(files[0]);
+            }
+          });
+
+          // File input change event
+          fileInput.addEventListener('change', function(e) {
+            console.log('File input changed');
+            if (e.target.files && e.target.files[0]) {
+              handleFile(e.target.files[0]);
+              // Reset file input so same file can be selected again
+              fileInput.value = '';
+            }
+          });
+
+          // Delete button click - clear entire canvas
+          if (deleteButton) {
+            deleteButton.addEventListener('click', function(e) {
+              e.preventDefault();
+              e.stopPropagation();
+              console.log('Delete button clicked');
+              clearCanvas();
+            });
+          }
+
+          // Delete selected object with DEL key
+          document.addEventListener('keydown', function(e) {
+            if (e.keyCode === 46 || e.key === 'Delete') {
+              const activeObject = canvas.getActiveObject();
+              if (activeObject) {
+                canvas.remove(activeObject);
+                canvas.renderAll();
+
+                // Update UI
+                updateCanvasUI();
+
+                // Save canvas data
+                saveCanvasData();
+                console.log('Object deleted from canvas');
+              }
+            }
+          });
+
+          // Update canvas data and UI whenever objects are modified
+          canvas.on('object:modified', function() {
+            saveCanvasData();
+            updateCanvasUI();
+          });
+
+          canvas.on('object:added', function() {
+            saveCanvasData();
+            updateCanvasUI();
+          });
+
+          canvas.on('object:removed', function() {
+            saveCanvasData();
+            updateCanvasUI();
+          });
+
+          // Handle variant changes - preserve canvas if needed
+          document.addEventListener('variant:change', function() {
+            console.log('Variant changed - canvas preserved');
+            // Canvas state is maintained automatically
+          });
+
+          // Handle window resize to update canvas dimensions
+          let resizeTimeout;
+          window.addEventListener('resize', function() {
+            clearTimeout(resizeTimeout);
+            resizeTimeout = setTimeout(function() {
+              const newDims = getCanvasDimensions();
+              canvas.setWidth(newDims.width);
+              canvas.setHeight(newDims.height);
+              canvas.renderAll();
+              console.log('Canvas resized to:', newDims.width, 'x', newDims.height);
+            }, 250);
+          });
+
+          console.log('Canvas initialized successfully');
+        }
+
+        // Start initialization
+        initCanvas();
+      }
+
+      // Wait for DOM to be ready
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initializeCustomDesign);
+      } else {
+        // DOM is already ready, initialize now
+        initializeCustomDesign();
+      }
+    })();
+  </script>
+{%- endif -%}
