@@ -816,12 +816,15 @@
             document.body.appendChild(uploadingIndicator);
 
             try {
-              // Upload file to Shopify via App Proxy
+              // Upload file to Shopify
+              // TEMPORARY: Using direct Vercel URL. After setting up App Proxy, change to: '/apps/design-upload/upload'
+              const uploadUrl = 'https://thereadcounts-shopify-upload.vercel.app/upload';
+
               const formData = new FormData();
               formData.append('file', file);
 
-              console.log('Uploading to Shopify...');
-              const response = await fetch('/apps/design-upload/upload', {
+              console.log('Uploading to Shopify via:', uploadUrl);
+              const response = await fetch(uploadUrl, {
                 method: 'POST',
                 body: formData
               });
