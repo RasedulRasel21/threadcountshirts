@@ -162,6 +162,9 @@
         <button type="button" class="canvas-delete-button" id="canvasDelete-{{ section.id }}" title="Remove design">
           ×
         </button>
+        <button type="button" class="canvas-confirm-button" id="canvasConfirm-{{ section.id }}" title="Confirm and upload final design">
+          Confirm Upload
+        </button>
         <div class="canvas-container">
           <canvas id="tshirt-canvas-{{ section.id }}"></canvas>
         </div>
@@ -191,6 +194,12 @@
         type="hidden"
         id="design-data-{{ section.id }}"
         name="properties[Design Data]"
+        form="product-form-{{ section.id }}"
+      >
+      <input
+        type="hidden"
+        id="confirmed-design-{{ section.id }}"
+        name="properties[Confirmed design]"
         form="product-form-{{ section.id }}"
       >
     </div>
@@ -476,6 +485,40 @@
       display: flex;
     }
 
+    .canvas-confirm-button {
+      position: absolute;
+      bottom: -50px;
+      left: 50%;
+      transform: translateX(-50%);
+      padding: 10px 20px;
+      background-color: #d4a574;
+      border: 2px solid #fff;
+      border-radius: 4px;
+      color: #000;
+      font-size: 14px;
+      font-weight: bold;
+      cursor: pointer;
+      display: none;
+      z-index: 1000;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+      transition: all 0.3s ease;
+    }
+
+    .canvas-confirm-button:hover {
+      background-color: #c49a68;
+      transform: translateX(-50%) scale(1.05);
+    }
+
+    .canvas-confirm-button.visible {
+      display: block;
+    }
+
+    .canvas-confirm-button:disabled {
+      background-color: #999;
+      cursor: not-allowed;
+      opacity: 0.6;
+    }
+
     .upload-area {
       border: 3px dashed #d4a574;
       background-color: rgba(60, 60, 60, 0.85);
@@ -667,7 +710,9 @@
         const fileInput = document.getElementById('tshirt-custompicture-' + sectionId);
         const uploadControls = document.getElementById('uploadControls-' + sectionId);
         const designDataInput = document.getElementById('design-data-' + sectionId);
+        const confirmedDesignInput = document.getElementById('confirmed-design-' + sectionId);
         const deleteButton = document.getElementById('canvasDelete-' + sectionId);
+        const confirmButton = document.getElementById('canvasConfirm-' + sectionId);
         const drawingArea = document.getElementById('drawingArea-' + sectionId);
 
         console.log('Custom Design Init:', {
@@ -676,7 +721,9 @@
           fileInput: !!fileInput,
           uploadControls: !!uploadControls,
           designDataInput: !!designDataInput,
+          confirmedDesignInput: !!confirmedDesignInput,
           deleteButton: !!deleteButton,
+          confirmButton: !!confirmButton,
           drawingArea: !!drawingArea
         });
 
@@ -738,6 +785,10 @@
               if (deleteButton) {
                 deleteButton.classList.add('visible');
               }
+              // Show confirm button
+              if (confirmButton) {
+                confirmButton.classList.add('visible');
+              }
             } else {
               // Show upload controls
               if (uploadControls) {
@@ -751,6 +802,10 @@
               if (deleteButton) {
                 deleteButton.classList.remove('visible');
               }
+              // Hide confirm button
+              if (confirmButton) {
+                confirmButton.classList.remove('visible');
+              }
             }
           }
 
@@ -759,33 +814,21 @@
             try {
               // Get all objects on canvas and extract Shopify URLs
               const canvasObjects = canvas.getObjects();
-              const designData = {
-                shopifyUrls: [],
-                canvasData: canvas.toJSON(['shopifyUrl']) // Include custom shopifyUrl property
-              };
+              const shopifyUrls = [];
 
               // Extract Shopify URLs from objects
               canvasObjects.forEach((obj) => {
                 if (obj.shopifyUrl) {
-                  designData.shopifyUrls.push(obj.shopifyUrl);
+                  shopifyUrls.push(obj.shopifyUrl);
                 }
               });
 
-              // Also include a preview image as base64 for thumbnail purposes
-              designData.preview = canvas.toDataURL({
-                format: 'png',
-                quality: 0.8,
-                multiplier: 0.5 // Smaller size for preview
-              });
-
+              // Store only the array of CDN URLs
               if (designDataInput) {
-                designDataInput.value = JSON.stringify(designData);
+                designDataInput.value = JSON.stringify(shopifyUrls);
               }
 
-              console.log('Saved design data:', {
-                shopifyUrls: designData.shopifyUrls,
-                objectCount: canvasObjects.length
-              });
+              console.log('Saved design data (CDN URLs only):', shopifyUrls);
             } catch (error) {
               console.error('Error saving canvas data:', error);
             }
@@ -797,6 +840,10 @@
             canvas.renderAll();
             updateCanvasUI();
             saveCanvasData();
+            // Clear confirmed design as well
+            if (confirmedDesignInput) {
+              confirmedDesignInput.value = '';
+            }
             console.log('Canvas cleared');
           }
 
@@ -956,6 +1003,67 @@
               e.stopPropagation();
               console.log('Delete button clicked');
               clearCanvas();
+            });
+          }
+
+          // Confirm button click - upload final canvas design
+          if (confirmButton) {
+            confirmButton.addEventListener('click', async function(e) {
+              e.preventDefault();
+              e.stopPropagation();
+              console.log('Confirm upload button clicked');
+
+              // Disable button during upload
+              confirmButton.disabled = true;
+              confirmButton.textContent = 'Uploading...';
+
+              try {
+                // Convert canvas to blob
+                const blob = await new Promise(resolve => {
+                  canvas.toBlob(resolve, 'image/png', 1.0);
+                });
+
+                // Create form data
+                const formData = new FormData();
+                formData.append('file', blob, 'confirmed-design.png');
+
+                // Upload to Shopify CDN
+                const uploadUrl = window.SHOPIFY_UPLOAD_CONFIG?.apiUrl || 'https://plankton-app-2f3dz.ondigitalocean.app/upload';
+
+                console.log('Uploading final design to:', uploadUrl);
+
+                const response = await fetch(uploadUrl, {
+                  method: 'POST',
+                  body: formData
+                });
+
+                if (!response.ok) {
+                  throw new Error(`Upload failed: ${response.statusText}`);
+                }
+
+                const result = await response.json();
+                console.log('Confirmed design upload response:', result);
+
+                if (!result.success || !result.url) {
+                  throw new Error(result.error || 'Failed to get file URL from Shopify');
+                }
+
+                // Store the confirmed design URL
+                if (confirmedDesignInput) {
+                  confirmedDesignInput.value = result.url;
+                  console.log('Confirmed design URL saved:', result.url);
+                }
+
+                alert('Design confirmed and uploaded successfully!');
+
+              } catch (error) {
+                console.error('Error confirming upload:', error);
+                alert('Failed to upload confirmed design: ' + error.message);
+              } finally {
+                // Re-enable button
+                confirmButton.disabled = false;
+                confirmButton.textContent = 'Confirm Upload';
+              }
             });
           }
 
