@@ -1086,29 +1086,113 @@
             return new Blob([u8arr], { type: mime });
           }
 
-          // Confirm button click - upload final canvas design
+          // Helper function to create composite image with t-shirt and design
+          async function createCompositeImage() {
+            return new Promise((resolve, reject) => {
+              try {
+                // Get the current product image (t-shirt) from the media gallery
+                const activeMedia = document.querySelector('.product__media.is-active img, .product__media img');
+                console.log('Active media element:', activeMedia);
+
+                if (!activeMedia) {
+                  reject(new Error('No product image found'));
+                  return;
+                }
+
+                console.log('Product image src:', activeMedia.src);
+
+                // Create a temporary canvas for compositing
+                const compositeCanvas = document.createElement('canvas');
+                const ctx = compositeCanvas.getContext('2d');
+
+                // Get the product image
+                const productImg = new Image();
+                productImg.crossOrigin = 'anonymous';
+
+                productImg.onload = function() {
+                  console.log('Product image loaded:', productImg.width, 'x', productImg.height);
+
+                  // Set canvas size to match product image
+                  compositeCanvas.width = productImg.width;
+                  compositeCanvas.height = productImg.height;
+
+                  // Draw the t-shirt background
+                  ctx.drawImage(productImg, 0, 0);
+                  console.log('Drew t-shirt background');
+
+                  // Get the design canvas position relative to the product image
+                  const drawingAreaRect = drawingArea.getBoundingClientRect();
+                  const productMediaRect = activeMedia.closest('.product__media').getBoundingClientRect();
+
+                  // Calculate the design position on the product image
+                  const scaleX = productImg.width / productMediaRect.width;
+                  const scaleY = productImg.height / productMediaRect.height;
+
+                  const designX = (drawingAreaRect.left - productMediaRect.left) * scaleX;
+                  const designY = (drawingAreaRect.top - productMediaRect.top) * scaleY;
+                  const designWidth = drawingAreaRect.width * scaleX;
+                  const designHeight = drawingAreaRect.height * scaleY;
+
+                  console.log('Design position:', { designX, designY, designWidth, designHeight });
+
+                  // Get the canvas design as image
+                  const designDataURL = canvas.toDataURL({
+                    format: 'png',
+                    quality: 1.0,
+                    multiplier: 1
+                  });
+
+                  const designImg = new Image();
+                  designImg.onload = function() {
+                    // Draw the design on top of the t-shirt
+                    ctx.drawImage(designImg, designX, designY, designWidth, designHeight);
+                    console.log('Drew design on top of t-shirt');
+
+                    // Convert to blob
+                    compositeCanvas.toBlob(function(blob) {
+                      console.log('Composite image created, blob size:', blob.size);
+                      resolve(blob);
+                    }, 'image/png', 1.0);
+                  };
+
+                  designImg.onerror = function() {
+                    reject(new Error('Failed to load design image'));
+                  };
+
+                  designImg.src = designDataURL;
+                };
+
+                productImg.onerror = function() {
+                  reject(new Error('Failed to load product image'));
+                };
+
+                productImg.src = activeMedia.src;
+
+              } catch (error) {
+                reject(error);
+              }
+            });
+          }
+
+          // Confirm button click - upload final canvas design with t-shirt
           if (confirmButton) {
             confirmButton.addEventListener('click', async function(e) {
               e.preventDefault();
               e.stopPropagation();
-              console.log('Confirm upload button clicked');
+              console.log('Confirm design button clicked');
 
               // Disable button during upload
               confirmButton.disabled = true;
               confirmButton.textContent = 'Uploading...';
 
               try {
-                // Convert Fabric.js canvas to data URL, then to blob
-                const dataURL = canvas.toDataURL({
-                  format: 'png',
-                  quality: 1.0,
-                  multiplier: 1
-                });
-                const blob = dataURLtoBlob(dataURL);
+                // Create composite image with t-shirt and design
+                console.log('Creating composite image with t-shirt and design...');
+                const blob = await createCompositeImage();
 
                 // Create form data
                 const formData = new FormData();
-                formData.append('file', blob, 'confirmed-design.png');
+                formData.append('file', blob, 'confirmed-design-with-tshirt.png');
 
                 // Upload to Shopify CDN
                 const uploadUrl = window.SHOPIFY_UPLOAD_CONFIG?.apiUrl || 'https://plankton-app-2f3dz.ondigitalocean.app/upload';
