@@ -816,9 +816,8 @@
             document.body.appendChild(uploadingIndicator);
 
             try {
-              // Upload file to Shopify
-              // TEMPORARY: Using direct Vercel URL. After setting up App Proxy, change to: '/apps/design-upload/upload'
-              const uploadUrl = 'https://thereadcounts-shopify-upload.vercel.app/upload';
+              // Upload file to Shopify via Digital Ocean API
+              const uploadUrl = 'https://plankton-app-2f3dz.ondigitalocean.app/upload';
 
               const formData = new FormData();
               formData.append('file', file);
