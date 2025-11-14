@@ -534,42 +534,6 @@
       margin: 15px 0 0 0;
     }
 
-    .upload-loading-overlay {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background-color: rgba(0, 0, 0, 0.7);
-      display: none;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      z-index: 9999;
-      border-radius: 8px;
-    }
-
-    .loading-spinner {
-      border: 4px solid rgba(255, 255, 255, 0.3);
-      border-top: 4px solid #c41e3a;
-      border-radius: 50%;
-      width: 50px;
-      height: 50px;
-      animation: spin 1s linear infinite;
-    }
-
-    .loading-message {
-      color: #ffffff;
-      font-size: 16px;
-      margin-top: 15px;
-      font-weight: 500;
-    }
-
-    @keyframes spin {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
-    }
-
     @media screen and (max-width: 749px) {
       .product__column-sticky{
         position: relative;
@@ -793,37 +757,37 @@
           // Save canvas data to hidden input
           function saveCanvasData() {
             try {
-              // Check if there are any objects on the canvas
               const objects = canvas.getObjects();
 
-              if (objects.length > 0) {
-                // Get Shopify URL from the first image (if available)
-                const firstImage = objects[0];
-                const shopifyUrl = firstImage.get('shopifyUrl');
-
-                if (shopifyUrl) {
-                  // Save Shopify URL instead of base64
-                  if (designDataInput) {
-                    designDataInput.value = shopifyUrl;
-                  }
-                  console.log('Saved Shopify URL:', shopifyUrl);
-                } else {
-                  // Fallback to base64 if no Shopify URL (for backward compatibility)
-                  const dataURL = canvas.toDataURL({
-                    format: 'png',
-                    quality: 1
-                  });
-                  if (designDataInput) {
-                    designDataInput.value = dataURL;
-                  }
-                  console.log('Saved base64 data (fallback)');
-                }
-              } else {
-                // Clear the input if canvas is empty
+              if (objects.length === 0) {
+                // No design, clear the input
                 if (designDataInput) {
                   designDataInput.value = '';
                 }
+                return;
               }
+
+              // Collect all Shopify URLs and design data
+              const designData = {
+                shopifyUrls: [],
+                canvasData: canvas.toJSON(['shopifyUrl', 'shopifyFileId'])
+              };
+
+              objects.forEach(obj => {
+                if (obj.shopifyUrl) {
+                  designData.shopifyUrls.push({
+                    url: obj.shopifyUrl,
+                    fileId: obj.shopifyFileId
+                  });
+                }
+              });
+
+              // Save as JSON string to hidden input
+              if (designDataInput) {
+                designDataInput.value = JSON.stringify(designData);
+              }
+
+              console.log('Canvas data saved:', designData);
             } catch (error) {
               console.error('Error saving canvas data:', error);
             }
@@ -839,7 +803,7 @@
           }
 
           // Handle file upload and add to canvas
-          async function handleFile(file) {
+          function handleFile(file) {
             console.log('Handling file:', file.name, file.type);
 
             if (!file.type.match('image.*')) {
@@ -848,130 +812,93 @@
             }
 
             // Show loading state
-            showLoadingState(true, 'Uploading to Shopify...');
-
-            try {
-              // Upload to Shopify
-              const shopifyUrl = await uploadToShopify(file);
-
-              if (!shopifyUrl) {
-                throw new Error('Failed to get Shopify URL');
-              }
-
-              console.log('File uploaded to Shopify:', shopifyUrl);
-
-              // Load image from Shopify URL
-              const imgObj = new Image();
-              imgObj.crossOrigin = 'anonymous';
-              imgObj.src = shopifyUrl;
-
-              imgObj.onload = function() {
-                const img = new fabric.Image(imgObj);
-
-                // Get current canvas dimensions for responsive scaling
-                const currentDims = getCanvasDimensions();
-                const scale = Math.min(currentDims.maxWidth / img.width, currentDims.maxHeight / img.height);
-
-                img.scale(scale);
-                canvas.centerObject(img);
-                canvas.add(img);
-                canvas.setActiveObject(img);
-                canvas.renderAll();
-
-                // Store Shopify URL in image data
-                img.set('shopifyUrl', shopifyUrl);
-
-                // Update UI
-                updateCanvasUI();
-
-                // Save canvas data with Shopify URL
-                saveCanvasData();
-
-                // Hide loading state
-                showLoadingState(false);
-
-                console.log('Image added to canvas from Shopify URL');
-              };
-
-              imgObj.onerror = function() {
-                showLoadingState(false);
-                alert('Failed to load image from Shopify. Please try again.');
-              };
-
-            } catch (error) {
-              console.error('Error uploading file:', error);
-              showLoadingState(false);
-              alert('Failed to upload file to Shopify: ' + error.message);
+            const uploadText = document.querySelector('.upload-text');
+            const originalText = uploadText ? uploadText.innerHTML : '';
+            if (uploadText) {
+              uploadText.innerHTML = 'Uploading to Shopify...';
             }
-          }
 
-          // Upload file to Shopify via serverless function
-          async function uploadToShopify(file) {
-            return new Promise((resolve, reject) => {
-              const reader = new FileReader();
+            const reader = new FileReader();
+            reader.onload = async function(event) {
+              try {
+                const base64Data = event.target.result;
 
-              reader.onload = async function(event) {
-                try {
-                  const fileData = event.target.result;
+                // Upload to Shopify via Netlify function
+                const response = await fetch('/.netlify/functions/upload-to-shopify', {
+                  method: 'POST',
+                  headers: {
+                    'Content-Type': 'application/json',
+                  },
+                  body: JSON.stringify({
+                    fileName: file.name,
+                    fileData: base64Data,
+                    fileType: file.type
+                  })
+                });
 
-                  // Call the Netlify serverless function
-                  // Update this URL to match your Netlify deployment URL
-                  const apiUrl = '/.netlify/functions/upload-to-shopify';
-
-                  const response = await fetch(apiUrl, {
-                    method: 'POST',
-                    headers: {
-                      'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                      fileName: file.name,
-                      fileData: fileData,
-                      fileType: file.type
-                    })
-                  });
-
-                  const result = await response.json();
-
-                  if (result.success && result.url) {
-                    resolve(result.url);
-                  } else {
-                    reject(new Error(result.error || 'Upload failed'));
-                  }
-                } catch (error) {
-                  reject(error);
+                if (!response.ok) {
+                  throw new Error('Failed to upload file to Shopify');
                 }
-              };
 
-              reader.onerror = function() {
-                reject(new Error('Failed to read file'));
-              };
+                const result = await response.json();
 
-              reader.readAsDataURL(file);
-            });
-          }
+                if (!result.success) {
+                  throw new Error(result.error || 'Upload failed');
+                }
 
-          // Show/hide loading state
-          function showLoadingState(show, message = 'Loading...') {
-            let loadingOverlay = document.getElementById('loading-overlay-' + sectionId);
+                console.log('File uploaded to Shopify:', result.url);
 
-            if (!loadingOverlay) {
-              // Create loading overlay if it doesn't exist
-              loadingOverlay = document.createElement('div');
-              loadingOverlay.id = 'loading-overlay-' + sectionId;
-              loadingOverlay.className = 'upload-loading-overlay';
-              loadingOverlay.innerHTML = `
-                <div class="loading-spinner"></div>
-                <p class="loading-message">${message}</p>
-              `;
-              document.getElementById('tshirt-div-' + sectionId).appendChild(loadingOverlay);
-            }
+                // Now load the image from Shopify URL
+                const imgObj = new Image();
+                imgObj.crossOrigin = 'anonymous';
+                imgObj.src = result.url;
 
-            if (show) {
-              loadingOverlay.querySelector('.loading-message').textContent = message;
-              loadingOverlay.style.display = 'flex';
-            } else {
-              loadingOverlay.style.display = 'none';
-            }
+                imgObj.onload = function() {
+                  const img = new fabric.Image(imgObj);
+
+                  // Store Shopify URL in custom property
+                  img.set('shopifyUrl', result.url);
+                  img.set('shopifyFileId', result.fileId);
+
+                  // Get current canvas dimensions for responsive scaling
+                  const currentDims = getCanvasDimensions();
+                  const scale = Math.min(currentDims.maxWidth / img.width, currentDims.maxHeight / img.height);
+
+                  img.scale(scale);
+                  canvas.centerObject(img);
+                  canvas.add(img);
+                  canvas.setActiveObject(img);
+                  canvas.renderAll();
+
+                  // Update UI
+                  updateCanvasUI();
+
+                  // Save canvas data (will use Shopify URL)
+                  saveCanvasData();
+
+                  console.log('Image added to canvas from Shopify URL');
+
+                  // Restore upload text
+                  if (uploadText) {
+                    uploadText.innerHTML = originalText;
+                  }
+                };
+
+                imgObj.onerror = function() {
+                  throw new Error('Failed to load image from Shopify URL');
+                };
+
+              } catch (error) {
+                console.error('Error uploading file:', error);
+                alert('Failed to upload file: ' + error.message);
+
+                // Restore upload text
+                if (uploadText) {
+                  uploadText.innerHTML = originalText;
+                }
+              }
+            };
+            reader.readAsDataURL(file);
           }
 
           // Click on button to upload
