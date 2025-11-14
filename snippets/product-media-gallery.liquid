@@ -1006,6 +1006,19 @@
             });
           }
 
+          // Helper function to convert data URL to blob
+          function dataURLtoBlob(dataURL) {
+            const arr = dataURL.split(',');
+            const mime = arr[0].match(/:(.*?);/)[1];
+            const bstr = atob(arr[1]);
+            let n = bstr.length;
+            const u8arr = new Uint8Array(n);
+            while (n--) {
+              u8arr[n] = bstr.charCodeAt(n);
+            }
+            return new Blob([u8arr], { type: mime });
+          }
+
           // Confirm button click - upload final canvas design
           if (confirmButton) {
             confirmButton.addEventListener('click', async function(e) {
@@ -1018,10 +1031,13 @@
               confirmButton.textContent = 'Uploading...';
 
               try {
-                // Convert canvas to blob
-                const blob = await new Promise(resolve => {
-                  canvas.toBlob(resolve, 'image/png', 1.0);
+                // Convert Fabric.js canvas to data URL, then to blob
+                const dataURL = canvas.toDataURL({
+                  format: 'png',
+                  quality: 1.0,
+                  multiplier: 1
                 });
+                const blob = dataURLtoBlob(dataURL);
 
                 // Create form data
                 const formData = new FormData();
