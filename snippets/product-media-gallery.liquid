@@ -162,9 +162,14 @@
         <button type="button" class="canvas-delete-button" id="canvasDelete-{{ section.id }}" title="Remove design">
           ×
         </button>
-        <button type="button" class="canvas-confirm-button" id="canvasConfirm-{{ section.id }}" title="Confirm and upload final design">
-          Confirm Upload
-        </button>
+        <div class="canvas-action-buttons">
+          <button type="button" class="canvas-cancel-button" id="canvasCancel-{{ section.id }}" title="Cancel and start over">
+            Cancel
+          </button>
+          <button type="button" class="canvas-confirm-button" id="canvasConfirm-{{ section.id }}" title="Confirm your final design">
+            Confirm Design
+          </button>
+        </div>
         <div class="canvas-container">
           <canvas id="tshirt-canvas-{{ section.id }}"></canvas>
         </div>
@@ -410,12 +415,16 @@
       border-radius: 8px;
       opacity: 0;
       visibility: hidden;
-      transition: opacity 0.3s ease, visibility 0.3s ease;
+      transition: opacity 0.3s ease, visibility 0.3s ease, border 0.3s ease;
     }
 
     .drawing-area.visible {
       opacity: 1;
       visibility: visible;
+    }
+
+    .drawing-area.confirmed {
+      border: none;
     }
 
     .canvas-container {
@@ -485,11 +494,44 @@
       display: flex;
     }
 
-    .canvas-confirm-button {
+    .canvas-action-buttons {
       position: absolute;
-      bottom: -50px;
+      bottom: -55px;
       left: 50%;
       transform: translateX(-50%);
+      display: none;
+      gap: 10px;
+      z-index: 1000;
+    }
+
+    .canvas-action-buttons.visible {
+      display: flex;
+    }
+
+    .canvas-cancel-button {
+      padding: 10px 20px;
+      background-color: #999;
+      border: 2px solid #fff;
+      border-radius: 4px;
+      color: #fff;
+      font-size: 14px;
+      font-weight: bold;
+      cursor: pointer;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+      transition: all 0.3s ease;
+      display: none;
+    }
+
+    .canvas-cancel-button.visible {
+      display: block;
+    }
+
+    .canvas-cancel-button:hover {
+      background-color: #777;
+      transform: scale(1.05);
+    }
+
+    .canvas-confirm-button {
       padding: 10px 20px;
       background-color: #d4a574;
       border: 2px solid #fff;
@@ -498,25 +540,44 @@
       font-size: 14px;
       font-weight: bold;
       cursor: pointer;
-      display: none;
-      z-index: 1000;
       box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
       transition: all 0.3s ease;
+      position: relative;
     }
 
-    .canvas-confirm-button:hover {
+    .canvas-confirm-button:hover:not(:disabled):not(.confirmed) {
       background-color: #c49a68;
-      transform: translateX(-50%) scale(1.05);
-    }
-
-    .canvas-confirm-button.visible {
-      display: block;
+      transform: scale(1.05);
     }
 
     .canvas-confirm-button:disabled {
-      background-color: #999;
       cursor: not-allowed;
-      opacity: 0.6;
+      opacity: 0.7;
+    }
+
+    .canvas-confirm-button.confirmed {
+      background-color: #4CAF50;
+      color: #fff;
+      cursor: default;
+      animation: confirmPulse 0.5s ease;
+    }
+
+    @keyframes confirmPulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.1); }
+      100% { transform: scale(1); }
+    }
+
+    .canvas-confirm-button .checkmark {
+      display: inline-block;
+      margin-right: 5px;
+      font-weight: bold;
+      animation: checkmarkAppear 0.3s ease;
+    }
+
+    @keyframes checkmarkAppear {
+      0% { opacity: 0; transform: scale(0); }
+      100% { opacity: 1; transform: scale(1); }
     }
 
     .upload-area {
@@ -713,7 +774,11 @@
         const confirmedDesignInput = document.getElementById('confirmed-design-' + sectionId);
         const deleteButton = document.getElementById('canvasDelete-' + sectionId);
         const confirmButton = document.getElementById('canvasConfirm-' + sectionId);
+        const cancelButton = document.getElementById('canvasCancel-' + sectionId);
+        const actionButtons = document.querySelector('.canvas-action-buttons');
         const drawingArea = document.getElementById('drawingArea-' + sectionId);
+
+        let isDesignConfirmed = false;
 
         console.log('Custom Design Init:', {
           uploadArea: !!uploadArea,
@@ -724,6 +789,8 @@
           confirmedDesignInput: !!confirmedDesignInput,
           deleteButton: !!deleteButton,
           confirmButton: !!confirmButton,
+          cancelButton: !!cancelButton,
+          actionButtons: !!actionButtons,
           drawingArea: !!drawingArea
         });
 
@@ -781,13 +848,13 @@
               if (drawingArea) {
                 drawingArea.classList.add('visible');
               }
-              // Show delete button
-              if (deleteButton) {
+              // Show delete button (unless confirmed)
+              if (deleteButton && !isDesignConfirmed) {
                 deleteButton.classList.add('visible');
               }
-              // Show confirm button
-              if (confirmButton) {
-                confirmButton.classList.add('visible');
+              // Show action buttons
+              if (actionButtons) {
+                actionButtons.classList.add('visible');
               }
             } else {
               // Show upload controls
@@ -802,9 +869,9 @@
               if (deleteButton) {
                 deleteButton.classList.remove('visible');
               }
-              // Hide confirm button
-              if (confirmButton) {
-                confirmButton.classList.remove('visible');
+              // Hide action buttons
+              if (actionButtons) {
+                actionButtons.classList.remove('visible');
               }
             }
           }
@@ -1070,22 +1137,92 @@
                   console.log('Confirmed design URL saved:', result.url);
                 }
 
-                alert('Design confirmed and uploaded successfully!');
+                // Mark design as confirmed
+                isDesignConfirmed = true;
+
+                // Make canvas non-interactive
+                canvas.selection = false;
+                canvas.forEachObject(function(obj) {
+                  obj.selectable = false;
+                  obj.evented = false;
+                });
+                canvas.renderAll();
+
+                // Remove border from drawing area
+                if (drawingArea) {
+                  drawingArea.classList.add('confirmed');
+                }
+
+                // Hide delete button
+                if (deleteButton) {
+                  deleteButton.classList.remove('visible');
+                }
+
+                // Update confirm button to show confirmed state
+                confirmButton.classList.add('confirmed');
+                confirmButton.innerHTML = '<span class="checkmark">✓</span> Confirmed';
+                confirmButton.disabled = false;
+
+                // Show cancel button
+                if (cancelButton) {
+                  cancelButton.classList.add('visible');
+                }
+
+                console.log('Design confirmed successfully!');
 
               } catch (error) {
                 console.error('Error confirming upload:', error);
                 alert('Failed to upload confirmed design: ' + error.message);
-              } finally {
-                // Re-enable button
+                // Re-enable button on error
                 confirmButton.disabled = false;
-                confirmButton.textContent = 'Confirm Upload';
+                confirmButton.textContent = 'Confirm Design';
               }
+            });
+          }
+
+          // Cancel button click - reset and start over
+          if (cancelButton) {
+            cancelButton.addEventListener('click', function(e) {
+              e.preventDefault();
+              e.stopPropagation();
+              console.log('Cancel button clicked');
+
+              // Clear canvas
+              clearCanvas();
+
+              // Reset confirmed state
+              isDesignConfirmed = false;
+
+              // Make canvas interactive again
+              canvas.selection = true;
+
+              // Remove confirmed class from drawing area
+              if (drawingArea) {
+                drawingArea.classList.remove('confirmed');
+              }
+
+              // Reset confirm button
+              if (confirmButton) {
+                confirmButton.classList.remove('confirmed');
+                confirmButton.innerHTML = 'Confirm Design';
+                confirmButton.disabled = false;
+              }
+
+              // Hide cancel button
+              cancelButton.classList.remove('visible');
+
+              // Clear confirmed design input
+              if (confirmedDesignInput) {
+                confirmedDesignInput.value = '';
+              }
+
+              console.log('Design cancelled and reset');
             });
           }
 
           // Delete selected object with DEL key
           document.addEventListener('keydown', function(e) {
-            if (e.keyCode === 46 || e.key === 'Delete') {
+            if ((e.keyCode === 46 || e.key === 'Delete') && !isDesignConfirmed) {
               const activeObject = canvas.getActiveObject();
               if (activeObject) {
                 canvas.remove(activeObject);
