@@ -1,0 +1,75 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "1763664559b686ba11": {
+      "type": "_blocks",
+      "blocks": {
+        "ai_gen_block_e94bbe8_4xGjTT": {
+          "type": "ai_gen_block_e94bbe8",
+          "settings": {
+            "image": "shopify://shop_images/Design_by_You_Made_by_Threadcount_for_Website_ccf6968f-5d00-43ce-b0cb-d04f1d34ca8a.webp",
+            "max_width": 70,
+            "border_radius": 0
+          },
+          "blocks": {}
+        }
+      },
+      "block_order": [
+        "ai_gen_block_e94bbe8_4xGjTT"
+      ],
+      "settings": {}
+    },
+    "main": {
+      "type": "main-page",
+      "disabled": true,
+      "settings": {
+        "padding_top": 28,
+        "padding_bottom": 28
+      }
+    },
+    "rich_text_qMGk3H": {
+      "type": "rich-text",
+      "blocks": {
+        "heading_6htC4H": {
+          "type": "heading",
+          "settings": {
+            "heading": "About Threadcount",
+            "heading_size": "h2"
+          }
+        },
+        "text_hzxwdj": {
+          "type": "text",
+          "settings": {
+            "text": "<p>We design and print full color custom t-shirts with super fast turnarounds and low minimums.Our t-shirts are made from100% ring-spun cotton and printed with water-based and eco friendly inks for a super soft comfortable wear. If you want a true retail quality t-shirt, order a Threadcount.</p>"
+          }
+        }
+      },
+      "block_order": [
+        "heading_6htC4H",
+        "text_hzxwdj"
+      ],
+      "name": "t:sections.rich-text.presets.name",
+      "settings": {
+        "desktop_content_position": "center",
+        "content_alignment": "center",
+        "color_scheme": "",
+        "full_width": true,
+        "padding_top": 40,
+        "padding_bottom": 52
+      }
+    }
+  },
+  "order": [
+    "main",
+    "rich_text_qMGk3H",
+    "1763664559b686ba11"
+  ]
+}

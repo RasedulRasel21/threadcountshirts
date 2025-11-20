@@ -155,6 +155,11 @@
         "slide_tCPz4N",
         "slide_nVb8Dy"
       ],
+      "custom_css": [
+        ".slideshow__buttons a {margin-top: 16px; width: 100%; padding: 24px; font-size: 20px; font-weight: 600; letter-spacing: 5px;}",
+        ".slideshow__buttons {margin-top: 28px;}",
+        "h2 {font-weight: 900;}"
+      ],
       "name": "Slideshow V2",
       "settings": {
         "container": "full",
@@ -209,6 +214,11 @@
         "column_4rnjE4",
         "column_w86An8"
       ],
+      "custom_css": [
+        ".multicolumn-list__item.center .media--adapt img {max-width: 70px; object-fit: contain; max-height: 70px; bottom: 0; top: unset !important; position: relative !important; transform: unset !important; left: unset !important; margin: 0 auto;}",
+        ".multicolumn-list p {margin: 0; line-height: 26px;}",
+        ".multicolumn-list__item.center .media--adapt {padding-bottom: 0 !important;}"
+      ],
       "name": "t:sections.multicolumn.presets.name",
       "settings": {
         "title": "",
@@ -219,11 +229,11 @@
         "button_link": "",
         "columns_desktop": 3,
         "column_alignment": "center",
-        "background_style": "primary",
+        "background_style": "none",
         "color_scheme": "",
         "columns_mobile": "1",
         "swipe_on_mobile": false,
-        "padding_top": 36,
+        "padding_top": 100,
         "padding_bottom": 36
       }
     },
@@ -266,9 +276,13 @@
         "column_pDrFh6",
         "column_WRwRGe"
       ],
+      "custom_css": [
+        "@media screen and (min-width: 750px) {.background-none .multicolumn-card__image-wrapper {margin-left: 4px !important; margin-right: 4px !important; }}",
+        ".multicolumn .title {margin: 0 auto; font-size: 30px;}"
+      ],
       "name": "t:sections.multicolumn.presets.name",
       "settings": {
-        "title": "",
+        "title": "How it works!",
         "heading_size": "h1",
         "image_width": "full",
         "image_ratio": "adapt",
@@ -276,7 +290,7 @@
         "button_link": "",
         "columns_desktop": 3,
         "column_alignment": "center",
-        "background_style": "primary",
+        "background_style": "none",
         "color_scheme": "",
         "columns_mobile": "1",
         "swipe_on_mobile": false,
@@ -315,6 +329,11 @@
         "text_Jejphg",
         "button_nFLpHg"
       ],
+      "custom_css": [
+        "@media screen and (min-width: 750px) {h2 {font-size: 32px; } .image-with-text__content .image-with-text__text + .button {width: 100%; padding: 24px; font-size: 20px; font-weight: 600; letter-spacing: 5px; }}",
+        "@media screen and (min-width: 768px) and (max-width: 1149px) {.image-with-text__content .image-with-text__text + .button{padding: 18px; font-size: 14px; font-weight: 600; letter-spacing: 3px;}}",
+        ".image-with-text__media {border: unset !important;}"
+      ],
       "name": "t:sections.image-with-text.presets.name",
       "settings": {
         "image": "shopify://shop_images/444.webp",
@@ -324,13 +343,240 @@
         "image_behavior": "none",
         "content_layout": "no-overlap",
         "desktop_content_position": "middle",
-        "desktop_content_alignment": "left",
+        "desktop_content_alignment": "center",
         "mobile_content_alignment": "left",
         "section_color_scheme": "scheme-3",
         "color_scheme": "scheme-3",
         "padding_top": 36,
         "padding_bottom": 36
       }
+    },
+    "176366007373cc7fa8": {
+      "type": "_blocks",
+      "blocks": {
+        "ai_gen_block_b21c260_gwwfeR": {
+          "type": "ai_gen_block_b21c260",
+          "settings": {
+            "title": "Recent projects!",
+            "title_size": 32,
+            "title_color": "#000000",
+            "image_1": "shopify://shop_images/Threadcount_Homepage_Sample_10_720x_b54116c7-3b01-4511-bf9e-51c89dfaf919.webp",
+            "image_2": "shopify://shop_images/Threadcount_Homepage_Sample_7_720x_7831e8df-84a2-4c1c-b370-772f9789a2f2.webp",
+            "aspect_ratio": "1/1",
+            "max_width": 1200,
+            "gap": 20,
+            "border_radius": 0,
+            "columns_mobile": "2"
+          },
+          "blocks": {}
+        },
+        "ai_gen_block_b21c260_4kUkrA": {
+          "type": "ai_gen_block_b21c260",
+          "settings": {
+            "title": "",
+            "title_size": 32,
+            "title_color": "#000000",
+            "image_1": "shopify://shop_images/Threadcount_Homepage_Sample_8_720x_ae377ede-9a09-44f2-9a89-8fb9b7111462.webp",
+            "image_2": "shopify://shop_images/Threadcount_Homepage_Sample_6_720x_8019a02f-6432-45d6-9686-9c78b2222755.webp",
+            "aspect_ratio": "1/1",
+            "max_width": 1200,
+            "gap": 20,
+            "border_radius": 0,
+            "columns_mobile": "2"
+          },
+          "blocks": {}
+        },
+        "ai_gen_block_b21c260_w8nqEy": {
+          "type": "ai_gen_block_b21c260",
+          "settings": {
+            "title": "",
+            "title_size": 32,
+            "title_color": "#000000",
+            "image_1": "shopify://shop_images/Threadcount_Homepage_Sample_2_720x_2ff3fb4f-75a3-488d-a852-45a5537c56b6.webp",
+            "image_2": "shopify://shop_images/Threadcount_Homepage_Sample_10_720x_b54116c7-3b01-4511-bf9e-51c89dfaf919.webp",
+            "aspect_ratio": "1/1",
+            "max_width": 1200,
+            "gap": 20,
+            "border_radius": 0,
+            "columns_mobile": "2"
+          },
+          "blocks": {}
+        },
+        "ai_gen_block_b21c260_KkQabE": {
+          "type": "ai_gen_block_b21c260",
+          "settings": {
+            "title": "",
+            "title_size": 32,
+            "title_color": "#000000",
+            "image_1": "shopify://shop_images/Threadcount_Homepage_Sample_9_720x_11e04975-0cdd-421b-8731-c832dd397979.webp",
+            "image_2": "shopify://shop_images/Threadcount_Homepage_Sample_17_720x_24695190-a64d-4ead-8120-080dea443c0d.webp",
+            "aspect_ratio": "1/1",
+            "max_width": 1200,
+            "gap": 20,
+            "border_radius": 0,
+            "columns_mobile": "2"
+          },
+          "blocks": {}
+        },
+        "ai_gen_block_b21c260_dFh9Ak": {
+          "type": "ai_gen_block_b21c260",
+          "settings": {
+            "title": "",
+            "title_size": 32,
+            "title_color": "#000000",
+            "image_1": "shopify://shop_images/Threadcount_Homepage_Sample_3_720x_7ab6fd7f-e63c-441b-ae65-43a1159b5491.webp",
+            "image_2": "shopify://shop_images/Threadcount_Homepage_Sample_14_720x_2d77edff-97cf-4940-938e-8b6f09ef30df.webp",
+            "aspect_ratio": "1/1",
+            "max_width": 1200,
+            "gap": 20,
+            "border_radius": 0,
+            "columns_mobile": "2"
+          },
+          "blocks": {}
+        },
+        "ai_gen_block_b21c260_6jHWx6": {
+          "type": "ai_gen_block_b21c260",
+          "settings": {
+            "title": "",
+            "title_size": 32,
+            "title_color": "#000000",
+            "image_1": "shopify://shop_images/Threadcount_Homepage_Sample_4_720x_ae7f1a5b-6285-4a32-a0d6-02638fe11a73.webp",
+            "image_2": "shopify://shop_images/Threadcount_Homepage_Sample_20_720x_5d551bd4-fd47-452d-a8c8-10adfe1eddb0.webp",
+            "aspect_ratio": "1/1",
+            "max_width": 1200,
+            "gap": 20,
+            "border_radius": 0,
+            "columns_mobile": "2"
+          },
+          "blocks": {}
+        },
+        "ai_gen_block_b21c260_gVMX6p": {
+          "type": "ai_gen_block_b21c260",
+          "settings": {
+            "title": "",
+            "title_size": 32,
+            "title_color": "#000000",
+            "image_1": "shopify://shop_images/Threadcount_Homepage_Sample_1_720x_ac2a3a4e-cfce-421b-bbcb-c89ac25d5a2f.webp",
+            "image_2": "shopify://shop_images/Threadcount_Homepage_Sample_11_720x_fd2875c0-1276-4fad-b19c-1922f36edfa4.webp",
+            "aspect_ratio": "1/1",
+            "max_width": 1200,
+            "gap": 20,
+            "border_radius": 0,
+            "columns_mobile": "2"
+          },
+          "blocks": {}
+        },
+        "ai_gen_block_b21c260_GwNHXG": {
+          "type": "ai_gen_block_b21c260",
+          "settings": {
+            "title": "",
+            "title_size": 32,
+            "title_color": "#000000",
+            "image_1": "shopify://shop_images/Threadcount_Homepage_Sample_5_720x_1d869b0a-cf88-4687-b2b4-12614c2c2859.webp",
+            "image_2": "shopify://shop_images/Threadcount_Homepage_Sample_19_720x_4fdc5ee1-5121-4173-b1bc-875daa72e124.webp",
+            "aspect_ratio": "1/1",
+            "max_width": 1200,
+            "gap": 20,
+            "border_radius": 0,
+            "columns_mobile": "2"
+          },
+          "blocks": {}
+        },
+        "ai_gen_block_b21c260_dWRKbr": {
+          "type": "ai_gen_block_b21c260",
+          "settings": {
+            "title": "",
+            "title_size": 32,
+            "title_color": "#000000",
+            "image_1": "shopify://shop_images/Threadcount_Homepage_Sample_16_720x_694aa591-14d7-43df-8979-60a537c7fa52.webp",
+            "image_2": "shopify://shop_images/Threadcount_Homepage_Sample_15_720x_133c04a2-cbcc-4e66-8251-a44078c37055.webp",
+            "aspect_ratio": "1/1",
+            "max_width": 1200,
+            "gap": 20,
+            "border_radius": 0,
+            "columns_mobile": "2"
+          },
+          "blocks": {}
+        },
+        "ai_gen_block_b21c260_zqiaGM": {
+          "type": "ai_gen_block_b21c260",
+          "settings": {
+            "title": "",
+            "title_size": 32,
+            "title_color": "#000000",
+            "image_1": "shopify://shop_images/Threadcount_Homepage_Sample_18_720x_8845fc0b-9fdf-46a4-b03e-04d671ef1a00.webp",
+            "image_2": "shopify://shop_images/Threadcount_Homepage_Sample_12_720x_6f40e30d-4e80-4bf4-b7fd-ccb3ba64e3fc.webp",
+            "aspect_ratio": "1/1",
+            "max_width": 1200,
+            "gap": 20,
+            "border_radius": 0,
+            "columns_mobile": "2"
+          },
+          "blocks": {}
+        }
+      },
+      "block_order": [
+        "ai_gen_block_b21c260_gwwfeR",
+        "ai_gen_block_b21c260_4kUkrA",
+        "ai_gen_block_b21c260_w8nqEy",
+        "ai_gen_block_b21c260_KkQabE",
+        "ai_gen_block_b21c260_dFh9Ak",
+        "ai_gen_block_b21c260_6jHWx6",
+        "ai_gen_block_b21c260_gVMX6p",
+        "ai_gen_block_b21c260_GwNHXG",
+        "ai_gen_block_b21c260_dWRKbr",
+        "ai_gen_block_b21c260_zqiaGM"
+      ],
+      "settings": {}
+    },
+    "1763660712d3e48a20": {
+      "type": "_blocks",
+      "blocks": {
+        "ai_gen_block_d13ea82_riKHwa": {
+          "type": "ai_gen_block_d13ea82",
+          "settings": {
+            "heading": "Have a question?",
+            "heading_alignment": "center",
+            "max_width": 1200,
+            "section_padding": 50,
+            "section_border_width": 1,
+            "section_border_color": "#e0e0e0",
+            "section_border_radius": 8,
+            "question_1": "Are there any color limitations?",
+            "answer_1": "<p>No. You can print full color artwork, photos and illustrations.</p>",
+            "question_2": "Are there minimum quantities?",
+            "answer_2": "<p>Our minimum is 12 shirts.</p>",
+            "question_3": "What is your turnaround time?",
+            "answer_3": "<p>Standard turnaround time is 14 business days. 7 day rush service is available at an additional cost.</p>",
+            "question_4": "What clothing brands do you print on?",
+            "answer_4": "<p>We print on Next Level Premium Apparel made from 100% cotton for a super soft comfortable wear. For our large custom orders we can print on just about any brand from Gildan, Bella Canvas, Independent, Comfort Colors, American Apparel, and more.<a href=\"https://threadcountshirts.com/pages/get-a-quote\">Get a quote now</a>!</p>",
+            "question_5": "What file formats do you accept?",
+            "answer_5": "<p>PNG, PSD, JPG, EPS, AI, SVG and PDF.</p>",
+            "question_6": "What printing methods do you use?",
+            "answer_6": "<p>Direct to Garment (DTG), Direct to Film (DTF), and Screen Printing.</p>",
+            "question_7": "What shipping services do you use?",
+            "answer_7": "<p>USPS, FedEx, and UPS.</p>",
+            "background_color": "#ffffff",
+            "heading_color": "#000000",
+            "heading_size": 32,
+            "heading_spacing": 30,
+            "question_color": "#000000",
+            "question_size": 18,
+            "question_weight": 600,
+            "answer_color": "#666666",
+            "answer_size": 16,
+            "border_color": "#e0e0e0",
+            "icon_color": "#000000",
+            "icon_size": 24,
+            "item_padding": 25
+          },
+          "blocks": {}
+        }
+      },
+      "block_order": [
+        "ai_gen_block_d13ea82_riKHwa"
+      ],
+      "settings": {}
     },
     "image_marquee_P8WLDG": {
       "type": "image-marquee",
@@ -406,7 +652,7 @@
       ],
       "name": "Scrolling Promotion V2",
       "settings": {
-        "color_scheme": "scheme-3",
+        "color_scheme": "scheme-1",
         "vertical_alignment": "start",
         "direction": "left",
         "pause_on_hover": true,
@@ -419,6 +665,40 @@
         "divider_layout": "vertical",
         "custom_class": ""
       }
+    },
+    "newsletter_rApPef": {
+      "type": "newsletter",
+      "blocks": {
+        "heading_JFtwkj": {
+          "type": "heading",
+          "settings": {
+            "heading": "Already a customer?",
+            "heading_size": "h2"
+          }
+        },
+        "paragraph_LBt9QV": {
+          "type": "paragraph",
+          "settings": {
+            "text": "<p>Search by name or project to view your products and purchase.</p>"
+          }
+        },
+        "email_form_tYKTGd": {
+          "type": "email_form",
+          "settings": {}
+        }
+      },
+      "block_order": [
+        "heading_JFtwkj",
+        "paragraph_LBt9QV",
+        "email_form_tYKTGd"
+      ],
+      "name": "t:sections.newsletter.presets.name",
+      "settings": {
+        "color_scheme": "scheme-3",
+        "full_width": true,
+        "padding_top": 40,
+        "padding_bottom": 52
+      }
     }
   },
   "order": [
@@ -427,6 +707,9 @@
     "multicolumn_QR6PJQ",
     "multicolumn_ayVJyJ",
     "image_with_text_7zJT7a",
-    "image_marquee_P8WLDG"
+    "176366007373cc7fa8",
+    "1763660712d3e48a20",
+    "image_marquee_P8WLDG",
+    "newsletter_rApPef"
   ]
 }
